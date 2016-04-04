@@ -33,4 +33,6 @@ add_subdirectory(lab03_curvature)
 add_subdirectory(lab04_decimation)
 add_subdirectory(lab05_smoothing)
 add_subdirectory(lab06_remeshing)
+add_subdirectory(lab07_deformation)
+
 add_subdirectory(project)
