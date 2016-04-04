@@ -11,6 +11,7 @@ struct MainWindow : public ArcballWindow{
         if(argc!=2) mFatal("application requires one parameter! e.g. sphere.obj");
         bool success = mesh.read(argv[1]);
         if(!success) mFatal() << "File not found: " << argv[1];
+        mesh.triangulate();
         mesh.update_face_normals(); ///< shading
         this->scene.add(renderer);
     }
