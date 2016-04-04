@@ -9,4 +9,6 @@ target_link_libraries(${EXERCISENAME} ${LIBRARIES})
 include_directories(internal)
 
 #--- Deploy data files
-file(COPY ${PROJECT_SOURCE_DIR}/data/indorelax.obj DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${PROJECT_SOURCE_DIR}/data/quad1.obj DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${PROJECT_SOURCE_DIR}/data/quad2.obj DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${PROJECT_SOURCE_DIR}/data/quad3.obj DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
