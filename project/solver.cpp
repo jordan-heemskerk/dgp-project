@@ -71,13 +71,13 @@ namespace csc486a {
             b_.clear();
             b_=ptr->project(std::move(b_));
             
-            for (auto && p : b_) {
+            for (auto && point : b_) {
                 
                 if (num==ps_) throw std::logic_error("Too many projections");
                 
-                p(num,0)=p(0);
-                p(num,1)=p(1);
-                p(num++,2)=p(2);
+                p(num,0)=point(0);
+                p(num,1)=point(1);
+                p(num++,2)=point(2);
                 
             }
             
