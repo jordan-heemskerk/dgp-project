@@ -1,65 +1,130 @@
 #include <Eigen/Dense>
 #include <iostream>
 #include <OpenGP/MLogger.h> /// mDebug() << 
+#include <cmath>
+
 #define UNUSED(expr) (void)expr
 
-int main(){
+#define DIM 3
+
+#define EPSILON 0.00001f
+
+static bool floateq (float a, float b) {
+    return std::abs(a-b) < EPSILON;
+}
+
+float variance (Eigen::MatrixXf A) {
+
+    //TODO: do this SMRT
+    auto u_x = A.colwise().mean();
+    auto A_temp = A;
+    A_temp.array().rowwise() -= u_x.array();
+    auto normed = A_temp.rowwise().squaredNorm();
+    auto var = normed.sum()/3.0;   
+    return var;
+}
+
+int main() {
     // Quick documentation (for MATLAB users)
     // http://eigen.tuxfamily.org/dox/AsciiQuickReference.txt
     
-    // Quick example: take two vectors, fill them, and do something.
-    Eigen::Vector3f u, v;
-    u(0) = 1.0;
-    u(1) = 0.0;
-    u(2) = 0.0;
+    std::cout << "Rigid Similarity Prototype" << std::endl;
 
-    // Another way of initializing a vector/matrix
-    v << 0.0, 1.0, 0.0;
+    Eigen::Matrix3f X;
+    Eigen::Matrix3f Y;
 
-    auto wStar = u + v;
+    X << 0,0,0,
+         1,0,0,
+         0,2,0;
 
-    mDebug() << "wStar: " << wStar.transpose();
+    Y << 1, 0, 0,
+        2, 0, 0,
+         1, 2, 0;
 
-    // Display them to standard output
-    mDebug() << "u: " << u.transpose();
-    mDebug() << "v: " << v.transpose();
+    Eigen::Vector3f u_x = X.colwise().mean();
+    float s_x = variance(X);
 
-    auto w = u.cross(v);
-    mDebug() << u.transpose() << " dot " << v.transpose() << " = " << w.transpose();
-    double dot = u.dot(v);
-    mDebug() << u.transpose() << " dot " << v.transpose() << " = " << dot;
+    Eigen::Vector3f u_y = Y.colwise().mean();
+    float s_y = variance(Y);
+
+
+    auto centered_y = Y.array().rowwise() - Y.colwise().mean().array();
+    auto centered_x = X.array().rowwise() - X.colwise().mean().array();
+
+    Eigen::Matrix3f S_xy = (centered_y * centered_x.transpose())/3.0;
+   
+
+    std::cout << "Matrix X:\n" << X << std::endl;
+    std::cout << "Matrix Y:\n" << Y << std::endl;
+    std::cout << "u_x: \n" << u_x << std::endl;
+    std::cout << "u_y: \n" << u_y << std::endl;
+    std::cout << "s_x: \n" << s_x << std::endl;
+    std::cout << "s_y: \n" << s_y << std::endl;
+    std::cout << "S_xy: \n" << S_xy << std::endl;
+
+
+    Eigen::JacobiSVD<Eigen::MatrixXf> svd(S_xy, Eigen::ComputeThinU | Eigen::ComputeThinV);
+
+    Eigen::Matrix3f U = svd.matrixU();
+    Eigen::Matrix3f D = svd.singularValues().asDiagonal(); //these should be sorted
+    Eigen::Matrix3f V = svd.matrixV();
+
+    std::cout << "U:\n" << U << std::endl;
+    std::cout << "D:\n" << D << std::endl;
+    std::cout << "V:\n" << V << std::endl;
+
+
+    auto det = S_xy.determinant();
+
+    auto rank = svd.rank();
+
+
+    std::cout << "Rank of S_xy = " << rank << std::endl;
+    assert(rank >= DIM-1);
+
+    Eigen::Matrix3f S = Eigen::Matrix3f::Identity();
+
+    if (det < 0) {
+        S(2,2) = -1;
+    }
+
+    if (rank == DIM-1) {
+        S = Eigen::Matrix3f::Identity();
+
+        auto det_cond = U.determinant() * V.determinant();
+        std::cout << "det_cond: " << det_cond << std::endl;
+
+        if (floateq(det_cond, 1)) {
+            //all good
+        } else if (floateq(det_cond, -1)) {
+            S(2,2) = -1;
+        } else {
+            std::cout << "GARBAGE" << std::endl;
+        }
+    }    
+
+
+    std::cout << "S:\n" << S << std::endl;
+
+    Eigen::Matrix3f R = U * S * V.transpose();
+    float c = (D*S).trace()/s_x;
+    auto t = u_y - c*R*u_x;
+
+    Eigen::Matrix3f new_X;
+  
+    float clamp = 0.1;
+    if (std::abs(c-1) > clamp) {
+        if ((c-1) > 0) c = 1 + clamp;
+        if ((c-1) < 0) c = 1 - clamp;
+    }
+ 
+    std::cout << "R:\n" << R << std::endl;
+    std::cout << "c:" << c << std::endl;
+    std::cout << "t:\n" << t << std::endl;
     
-
-    // Notice that these two now have the same value. Eigen normalizes in place.
-    // Note: be careful in performing A=A.something()! See "ALIASING" topic in Eigen
-    auto uHat = u.normalized();
-    u.normalize();
-    auto normU = u.norm();
-    auto normUHat = uHat.norm();
-    mDebug() << "\n";
-    mDebug() << "normU:" << normU;
-    mDebug() << "normUHat: " << normUHat;
-
-    // Now let's set up a matrix.
-    Eigen::Matrix2f m;
-    m(0, 0) = 3;
-    m(1, 0) = 2.5;
-    m(0, 1) = -1;
-    m(1, 1) = m(1, 0) + m(0, 1);
-    std::cout << "\nMatrix m:\n" << m << std::endl; 
-
-    // Again, inline initialization
-    Eigen::Matrix3f n;
-    n << 1, 2, 3,
-        4, 5, 6,
-        7, 8, 9;
-    std::cout << "\nMatrix n:\n" << n << std::endl; 
-
-    // And we can do the operations seen on the slides.
-    //auto m1 = m + n; // This will fail.
-    auto m2 = Eigen::Matrix2f::Identity();
-    auto m3 = m + m2; // This will not.
-    std::cout << "\nMatrix m3:\n" << m3 << std::endl; 
-    
+    for (int i = 0; i < 3; i ++) { 
+        auto test = c*R*X.row(i).transpose() +t;
+        std::cout << "Point " << i << ": \n" << test << std::endl; 
+    }   
     return 0;
 }
