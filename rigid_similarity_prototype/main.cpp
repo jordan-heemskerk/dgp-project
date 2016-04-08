@@ -18,7 +18,7 @@ float variance (Eigen::MatrixXf A) {
     //TODO: do this SMRT
     auto u_x = A.colwise().mean();
     auto A_temp = A;
-    A_temp.array().rowwise() -= u_x.array();
+    A_temp.rowwise() -= u_x;
     auto normed = A_temp.rowwise().squaredNorm();
     auto var = normed.sum()/3.0;   
     return var;
@@ -37,9 +37,9 @@ int main() {
          1,0,0,
          0,2,0;
 
-    Y << 1, 0, 0,
-        2, 0, 0,
-         1, 2, 0;
+    Y << 0, 0, 0,
+         -1, 0, 0,
+         0, 2, 0;
 
     Eigen::Vector3f u_x = X.colwise().mean();
     float s_x = variance(X);
@@ -48,10 +48,13 @@ int main() {
     float s_y = variance(Y);
 
 
-    auto centered_y = Y.array().rowwise() - Y.colwise().mean().array();
-    auto centered_x = X.array().rowwise() - X.colwise().mean().array();
+    auto centered_y = Y.rowwise() - Y.colwise().mean();
+    auto centered_x = X.rowwise() - X.colwise().mean();
 
-    Eigen::Matrix3f S_xy = (centered_y * centered_x.transpose())/3.0;
+    std::cout << "centered_x: \n" << centered_x << std::endl;
+    std::cout << "centered_y: \n" << centered_y << std::endl;
+    
+    Eigen::Matrix3f S_xy = (centered_y.adjoint() * centered_x)/3.0;
    
 
     std::cout << "Matrix X:\n" << X << std::endl;
@@ -108,16 +111,16 @@ int main() {
 
     Eigen::Matrix3f R = U * S * V.transpose();
     float c = (D*S).trace()/s_x;
-    auto t = u_y - c*R*u_x;
+    Eigen::Vector3f t = u_y - c*R*u_x;
 
     Eigen::Matrix3f new_X;
-  
+
     float clamp = 0.1;
     if (std::abs(c-1) > clamp) {
         if ((c-1) > 0) c = 1 + clamp;
         if ((c-1) < 0) c = 1 - clamp;
     }
- 
+
     std::cout << "R:\n" << R << std::endl;
     std::cout << "c:" << c << std::endl;
     std::cout << "t:\n" << t << std::endl;
