@@ -7,7 +7,9 @@
 namespace csc486a {
     
     
-    constraint_base::constraint_base (const OpenGP::SurfaceMesh & mesh, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w) : mesh_(mesh), vs_(std::move(vs)), w_(w) {
+    constraint_base::constraint_base (const OpenGP::SurfaceMesh & mesh, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w) : mesh_(mesh), vs_(std::move(vs)), w_(w), vpoints_(mesh.get_vertex_property<point_type>("v:point")) {
+        
+        if (!vpoints_) throw std::logic_error("Mesh does not have \"v:point\" property");
         
         if (vs_.empty()) throw std::logic_error("Expected at least one vertex");
         

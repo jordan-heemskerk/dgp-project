@@ -28,6 +28,7 @@ namespace csc486a {
             const OpenGP::SurfaceMesh & mesh_;
             std::vector<OpenGP::SurfaceMesh::Vertex> vs_;
             float w_;
+            OpenGP::SurfaceMesh::Vertex_property<point_type> vpoints_;
         
         
         public:
