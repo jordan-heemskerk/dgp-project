@@ -86,6 +86,7 @@ namespace csc486a {
         
         //  Perform the global solve
         Eigen::MatrixX3f v(q_->solve(p));
+        if (q_->info()!=Eigen::Success) throw std::runtime_error("Cholesky solve failed");
         if (v.rows()!=mesh_.n_vertices()) throw std::logic_error("Wrong number of entries in matrix V");
         std::size_t row(0);
         for (auto && vec : mesh_.vertices()) {
