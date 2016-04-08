@@ -33,8 +33,8 @@ namespace csc486a {
         
             OpenGP::SurfaceMesh & mesh_;
             std::vector<const constraint *> cs_;
-            std::optional<cholesky_type> q_;
-            std::size_t ps_;
+            std::optional<sparse_type> q_;
+            std::optional<cholesky_type> solver_;
             constraint::points_type b_;
             OpenGP::SurfaceMesh::Vertex_property<constraint::point_type> vpoints_;
         

@@ -35,13 +35,12 @@ namespace csc486a {
             ++row;
             
         }
-        ps_=row;
         
-        sparse_type q(row,n);
-        q.setFromTriplets(ts.begin(),ts.end());
+        q_.emplace(row,n);
+        q_->setFromTriplets(ts.begin(),ts.end());
         
-        q_.emplace(q);
-        if (q_->info()!=Eigen::Success) throw std::runtime_error("Failed to create Cholesky factorization");
+        solver_.emplace(q_->transpose()**q_);
+        if (solver_->info()!=Eigen::Success) throw std::runtime_error("Failed to create Cholesky factorization");
         
     }
     
@@ -64,7 +63,8 @@ namespace csc486a {
         
         //  First get the projections by performing
         //  the local solves
-        Eigen::MatrixX3f p(ps_,3);
+        std::size_t ps(q_->rows());
+        Eigen::MatrixX3f p(ps,3);
         std::size_t num(0);
         for (auto && ptr : cs_) {
             
@@ -73,7 +73,7 @@ namespace csc486a {
             
             for (auto && point : b_) {
                 
-                if (num==ps_) throw std::logic_error("Too many projections");
+                if (num==ps) throw std::logic_error("Too many projections");
                 
                 p(num,0)=point(0);
                 p(num,1)=point(1);
@@ -82,11 +82,11 @@ namespace csc486a {
             }
             
         }
-        if (num<ps_) throw std::logic_error("Insufficient projections");
+        if (num<ps) throw std::logic_error("Insufficient projections");
         
         //  Perform the global solve
-        Eigen::MatrixX3f v(q_->solve(p));
-        if (q_->info()!=Eigen::Success) throw std::runtime_error("Cholesky solve failed");
+        Eigen::MatrixX3f v(solver_->solve(q_->transpose()*p));
+        if (solver_->info()!=Eigen::Success) throw std::runtime_error("Cholesky solve failed");
         if (v.rows()!=mesh_.n_vertices()) throw std::logic_error("Wrong number of entries in matrix V");
         std::size_t row(0);
         for (auto && vec : mesh_.vertices()) {
