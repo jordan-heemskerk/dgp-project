@@ -45,7 +45,7 @@ namespace csc486a {
     }
     
     
-    solver::solver (OpenGP::SurfaceMesh & mesh) : mesh_(mesh), vpoints_(mesh_.vertex_property<constraint::point_type>("v:point")) {    }
+    solver::solver (OpenGP::SurfaceMesh & mesh) : has_mesh<>(mesh) {    }
     
     
     void solver::add (const constraint & c) {

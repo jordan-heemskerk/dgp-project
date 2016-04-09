@@ -7,6 +7,7 @@
 
 
 #include <csc486a/constraint.hpp>
+#include <csc486a/has_mesh.hpp>
 #include <Eigen/SparseCholesky>
 #include <Eigen/SparseCore>
 #include <OpenGP/SurfaceMesh/SurfaceMesh.h>
@@ -21,7 +22,7 @@ namespace csc486a {
     /**
      *  Represents a Shape Op solver.
      */
-    class solver {
+    class solver : protected has_mesh<> {
         
         
         private:
@@ -31,12 +32,10 @@ namespace csc486a {
             using cholesky_type=Eigen::SimplicialLDLT<sparse_type>;
         
         
-            OpenGP::SurfaceMesh & mesh_;
             std::vector<const constraint *> cs_;
             std::optional<sparse_type> q_;
             std::optional<cholesky_type> solver_;
             constraint::points_type b_;
-            OpenGP::SurfaceMesh::Vertex_property<constraint::point_type> vpoints_;
         
         
             void create_q ();

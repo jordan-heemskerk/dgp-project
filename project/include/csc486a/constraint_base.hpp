@@ -7,6 +7,7 @@
 
 
 #include <csc486a/constraint.hpp>
+#include <csc486a/has_mesh.hpp>
 #include <OpenGP/SurfaceMesh/SurfaceMesh.h>
 #include <vector>
 
@@ -19,16 +20,14 @@ namespace csc486a {
      *  constraints which implements common
      *  operations.
      */
-    class constraint_base : public constraint {
+    class constraint_base : public constraint, protected has_mesh<true,true> {
         
         
         protected:
         
         
-            const OpenGP::SurfaceMesh & mesh_;
             std::vector<OpenGP::SurfaceMesh::Vertex> vs_;
             float w_;
-            OpenGP::SurfaceMesh::Vertex_property<point_type> vpoints_;
         
         
         public:
