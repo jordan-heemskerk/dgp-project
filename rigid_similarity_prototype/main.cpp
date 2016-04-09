@@ -1,6 +1,6 @@
 #include <Eigen/Dense>
 #include <iostream>
-#include <OpenGP/MLogger.h> /// mDebug() << 
+#include <OpenGP/MLogger.h> /// mDebug() <<
 #include <cmath>
 
 #define UNUSED(expr) (void)expr
@@ -20,14 +20,14 @@ float variance (Eigen::MatrixXf A) {
     auto A_temp = A;
     A_temp.rowwise() -= u_x;
     auto normed = A_temp.rowwise().squaredNorm();
-    auto var = normed.sum()/3.0;   
+    auto var = normed.sum()/3.0;
     return var;
 }
 
 int main() {
     // Quick documentation (for MATLAB users)
     // http://eigen.tuxfamily.org/dox/AsciiQuickReference.txt
-    
+
     std::cout << "Rigid Similarity Prototype" << std::endl;
 
     Eigen::Matrix3f X;
@@ -53,9 +53,9 @@ int main() {
 
     std::cout << "centered_x: \n" << centered_x << std::endl;
     std::cout << "centered_y: \n" << centered_y << std::endl;
-    
+
     Eigen::Matrix3f S_xy = (centered_y.adjoint() * centered_x)/3.0;
-   
+
 
     std::cout << "Matrix X:\n" << X << std::endl;
     std::cout << "Matrix Y:\n" << Y << std::endl;
@@ -104,7 +104,7 @@ int main() {
         } else {
             std::cout << "GARBAGE" << std::endl;
         }
-    }    
+    }
 
 
     std::cout << "S:\n" << S << std::endl;
@@ -124,10 +124,10 @@ int main() {
     std::cout << "R:\n" << R << std::endl;
     std::cout << "c:" << c << std::endl;
     std::cout << "t:\n" << t << std::endl;
-    
-    for (int i = 0; i < 3; i ++) { 
+
+    for (int i = 0; i < 3; i ++) {
         auto test = c*R*X.row(i).transpose() +t;
-        std::cout << "Point " << i << ": \n" << test << std::endl; 
-    }   
+        std::cout << "Point " << i << ": \n" << test << std::endl;
+    }
     return 0;
 }
