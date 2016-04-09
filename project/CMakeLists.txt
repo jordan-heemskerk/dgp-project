@@ -7,6 +7,7 @@ file(GLOB_RECURSE SHADERS "*.glsl")
 add_executable(${EXERCISENAME} ${SOURCES} ${HEADERS} ${SHADERS})
 target_link_libraries(${EXERCISENAME} ${LIBRARIES})
 include_directories(internal)
+include_directories(include)
 
 #--- Deploy data files
 file(COPY ${PROJECT_SOURCE_DIR}/data/quad1.obj DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
