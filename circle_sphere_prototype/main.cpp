@@ -27,17 +27,17 @@ int main(){
 //    std::cout << "Center" << cSpec << std::endl;
 
     //calculate all sums needed in further calculations
-    float sumX = X2D.col(0).sum();
-    float sumXSq = (X2D.col(0).transpose()*X2D.col(0)).sum();
-    float sumXCube = ((X2D.col(0).transpose()*X2D.col(0))*X2D.col(0).transpose()).sum();
+    float sumX = X2D.col(0).array().sum();
+    float sumXSq = (X2D.col(0).array()*X2D.col(0).array()).sum();
+    float sumXCube = ((X2D.col(0).array()*X2D.col(0).array())*X2D.col(0).array()).sum();
 
-    float sumY = X2D.col(1).sum();
-    float sumYSq = (X2D.col(1).transpose()*X2D.col(1)).sum();
-    float sumYCube = ((X2D.col(1).transpose()*X2D.col(1))*X2D.col(1).transpose()).sum();
+    float sumY = X2D.col(1).array().sum();
+    float sumYSq = (X2D.col(1).array()*X2D.col(1).array()).sum();
+    float sumYCube = ((X2D.col(1).array()*X2D.col(1).array())*X2D.col(1).array()).sum();
 
-    float sumXY = (X2D.col(0).transpose()*X2D.col(1)).sum();
-    float sumXSqY = ((X2D.col(0).transpose()*X2D.col(0))*X2D.col(1).transpose()).sum();
-    float sumXYSq = (X2D.col(0)*(X2D.col(1).transpose()*X2D.col(1))).sum();
+    float sumXY = (X2D.col(0).array()*X2D.col(1).array()).sum();
+    float sumXSqY = ((X2D.col(0).array()*X2D.col(0).array())*X2D.col(1).array()).sum();
+    float sumXYSq = (X2D.col(0).array()*(X2D.col(1).array()*X2D.col(1).array())).sum();
 
     std::cout << "sumX: " << sumX << std::endl;
     std::cout << "sumY: " << sumY << std::endl;
@@ -64,5 +64,12 @@ int main(){
     std::cout << "c1: " << c1 << std::endl;
     std::cout << "c2: " << c2 << std::endl;
 
+    //calculate center coordinates and radius
+    float xBar = (c1*b2 - c2*b1) / (a1*b2 - a2*b1);
+    float yBar = (a1*c2 - a2*c1) / (a1*b2 - a2*b2);
+    float radius = std::sqrt((1/float(N))*(sumXSq - 2*sumX*xBar + N*(xBar*xBar) + sumYSq - 2*sumY*yBar + N*(yBar*yBar)));
 
+    std::cout << "xBar: " << xBar << std::endl;
+    std::cout << "yBar: " << yBar << std::endl;
+    std::cout << "radius: " << radius << std::endl;
 }
