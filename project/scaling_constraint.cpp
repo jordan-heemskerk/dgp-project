@@ -34,6 +34,7 @@ namespace csc486a {
             
             auto npos=vpoints_[v];
             npos*=s_;
+            npos*=w_;
             ps.push_back(npos);
             
         }

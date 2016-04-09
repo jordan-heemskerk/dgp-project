@@ -32,7 +32,7 @@ namespace csc486a {
         
         auto result=(u*c).eval();
         std::size_t num(vs_.size());
-        for (std::size_t i=0;i<num;++i) ps.emplace_back(c.col(i));
+        for (std::size_t i=0;i<num;++i) ps.emplace_back(c.col(i)*w_);
         
         return ps;
         
