@@ -1,4 +1,5 @@
 #include <csc486a/rigid_similarity_constraint_base.hpp>
+#include <utility>
 
 
 #define DIM (3)
@@ -7,11 +8,11 @@
 namespace csc486a {
     
     
-    bool rigid_similarity_constraint_base::floateq (float a, float b) const {
+    static bool floateq (float a, float b) {
         return std::abs(a-b) < EPSILON;
     }
     
-    float rigid_similarity_constraint_base::variance(Eigen::MatrixXf A) const {
+    static float variance(Eigen::MatrixXf A) {
         auto u_x = A.colwise().mean();
         auto A_temp = A;
         A_temp.rowwise() -= u_x;
@@ -21,7 +22,7 @@ namespace csc486a {
     }
     
     
-    rigid_similarity_constraint_base::rigid_similarity_constraint_base (const OpenGP::SurfaceMesh & mesh, OpenGP::SurfaceMesh deformed, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, rigid_similarity_constraint_base::type t, float clamp) : vertices_constraint_base(mesh, std::move(vs), w), deformed_(deformed), t_(t), clamp_(clamp) { }
+    rigid_similarity_constraint_base::rigid_similarity_constraint_base (const OpenGP::SurfaceMesh & mesh, OpenGP::SurfaceMesh deformed, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, rigid_similarity_constraint_base::type t, float clamp) : vertices_constraint_base(mesh, std::move(vs), w), deformed_(std::move(deformed)), t_(t), clamp_(clamp) { }
     
     rigid_similarity_constraint_base::points_type rigid_similarity_constraint_base::project(points_type ps) const {
         

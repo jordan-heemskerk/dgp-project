@@ -5,6 +5,8 @@
 #pragma once
 
 #include <csc486a/vertices_constraint_base.hpp>
+#include <Eigen/Dense>
+#include <OpenGP/SurfaceMesh/SurfaceMesh.h>
 
 namespace csc486a {
     
@@ -29,11 +31,6 @@ namespace csc486a {
     protected:
         
         rigid_similarity_constraint_base (const OpenGP::SurfaceMesh & mesh, OpenGP::SurfaceMesh deformed, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, type t, float clamp);
-        
-    private:
-        
-        bool floateq(float a, float b) const;
-        float variance(Eigen::MatrixXf A) const;
         
     public:
         
