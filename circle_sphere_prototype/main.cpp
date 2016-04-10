@@ -11,11 +11,11 @@ void sphere(){
 
     //cloud of 3d points
     Eigen::MatrixXf X2D(N,3);
-    X2D <<  1,0,0,
+    X2D <<  2,0,0,
             -2,0,0,
-            0,3,0,
+            0,2,0,
             0,-2,0,
-            0,0,4,
+            0,0,2,
             0,0,-2;
 
     //calculate all sums needed in further calculations
@@ -65,7 +65,7 @@ void sphere(){
     //calculate a's b's and c's
     float a1 = 2*(sumX*sumX - N*sumXSq);
     float a2 = 2*(sumX*sumY - N*sumXY);
-    float a3 = 2*(sumX*sumZ - N*sumXSq);
+    float a3 = 2*(sumX*sumZ - N*sumXZ);
     float b1 = a2;
     float b2 = 2*(sumY*sumY - N*sumYSq);
     float b3 = 2*(sumY*sumZ - N*sumYZ);
@@ -103,9 +103,9 @@ void sphere(){
     Eigen::Vector3f X = A.inverse()*B;
 
     //calculate
-    float xBar = A(0);
-    float yBar = A(1);
-    float zBar = A(2);
+    float xBar = X(0);
+    float yBar = X(1);
+    float zBar = X(2);
 
     std::cout << "A: " << std::endl;
     std::cout << A << std::endl;
@@ -114,6 +114,10 @@ void sphere(){
     std::cout << "xBar: " << xBar << std::endl;
     std::cout << "yBar: " << yBar << std::endl;
     std::cout << "zBar: " << zBar << std::endl;
+
+    float radius = std::sqrt((1/(float)N)*(sumXSq - 2*sumX*xBar + N*xBar*xBar + sumYSq - 2*sumY*yBar + N*yBar*yBar + sumZSq - 2*sumZ*zBar + N*zBar*zBar));
+
+    std::cout << "radius: " << radius << std::endl;
 }
 
 void circle(){
