@@ -37,3 +37,4 @@ include(cmake/ConfigureCompiler.cmake)
 
 add_subdirectory(project)
 add_subdirectory(rigid_similarity_prototype)
+add_subdirectory(circle_sphere_prototype)
