@@ -18,7 +18,7 @@ namespace csc486a {
         public:
 
 
-        sphere_constraint (const OpenGP::SurfaceMesh & mesh, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w);
+        sphere_constraint (const OpenGP::SurfaceMesh & mesh, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, type);
 
 
     };
