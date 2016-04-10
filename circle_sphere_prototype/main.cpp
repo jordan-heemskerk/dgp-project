@@ -19,7 +19,6 @@ void sphere(){
             0,0,-2;
 
     //calculate all sums needed in further calculations
-    //calculate all sums needed in further calculations
     float sumX = X2D.col(0).array().sum();
     float sumXSq = (X2D.col(0).array()*X2D.col(0).array()).sum();
     float sumXCube = ((X2D.col(0).array()*X2D.col(0).array())*X2D.col(0).array()).sum();
