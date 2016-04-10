@@ -6,13 +6,13 @@
 #pragma once
 
 
-#include <csc486a/constraint_base.hpp>
+#include <csc486a/vertices_constraint_base.hpp>
 
 
 namespace csc486a {
     
     
-    class line_plane_constraint_base : public constraint_base {
+    class line_plane_constraint_base : public vertices_constraint_base {
         
         
         protected:
