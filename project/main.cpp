@@ -2,7 +2,7 @@
 #include <OpenGP/SurfaceMesh/GL/SurfaceMeshRenderFlat.h>
 #include "ArcballWindow.h"
 #include <csc486a/closeness_constraint.hpp>
-#include <csc486a/line_constraint.hpp>
+#include <csc486a/scaling_constraint.hpp>
 #include <csc486a/solver.hpp>
 #include <optional.hpp>
 #include <deque>
@@ -14,7 +14,7 @@ struct MainWindow : public ArcballWindow{
     SurfaceMeshRenderFlat renderer = SurfaceMeshRenderFlat(mesh);
     std::optional<csc486a::solver> s_;
     std::deque<csc486a::closeness_constraint> ccs_;
-    std::optional<csc486a::line_constraint> lc_;
+    std::deque<csc486a::scaling_constraint> scs_;
  
     MainWindow(int argc, char** argv) : ArcballWindow(__FILE__,400,400){
         if(argc!=2) mFatal("application requires one parameter! e.g. sphere.obj");
@@ -24,18 +24,16 @@ struct MainWindow : public ArcballWindow{
         mesh.update_face_normals(); ///< shading
         this->scene.add(renderer);
         
-        std::vector<OpenGP::SurfaceMesh::Vertex> vs;
         for (auto && v : mesh.vertices()) {
             
             ccs_.emplace_back(mesh,v,1.0f);
-            vs.push_back(v);
+            scs_.emplace_back(mesh,v,1.5f,1.0f);
             
         }
-        lc_.emplace(mesh,std::move(vs),1.0f);
         
         s_.emplace(mesh);
         for (auto && cc : ccs_) s_->add(cc);
-        s_->add(*lc_);
+        for (auto && sc : scs_) s_->add(sc);
         
     }
     

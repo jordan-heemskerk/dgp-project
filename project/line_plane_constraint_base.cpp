@@ -8,7 +8,7 @@
 namespace csc486a {
     
     
-    line_plane_constraint_base::line_plane_constraint_base (const OpenGP::SurfaceMesh & mesh, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, type t) : constraint_base(mesh,std::move(vs),w), t_(t) {    }
+    line_plane_constraint_base::line_plane_constraint_base (const OpenGP::SurfaceMesh & mesh, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, type t) : vertices_constraint_base(mesh,std::move(vs),w), t_(t) {    }
     
     
     line_plane_constraint_base::points_type line_plane_constraint_base::project (points_type ps) const {
