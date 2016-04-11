@@ -3,6 +3,7 @@
 #include <OpenGP/SurfaceMesh/SurfaceMesh.h>
 #include <cstdlib>
 #include <deque>
+#include <sstream>
 #include <stdexcept>
 #include <utility>
 
