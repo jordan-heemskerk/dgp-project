@@ -13,6 +13,7 @@
 #include <OpenGP/SurfaceMesh/SurfaceMesh.h>
 #include <SurfaceMeshVerticesKDTree.h>
 #include <optional.hpp>
+#include <chrono>
 #include <memory>
 #include <vector>
 
@@ -51,9 +52,14 @@ namespace csc486a {
         private:
         
         
+            using clock_type=std::chrono::steady_clock;
+            using time_point_type=clock_type::time_point;
+        
+        
             OpenGP::SurfaceMeshRenderFlat renderer_;
             solver s_;
             std::optional<OpenGP::SurfaceMeshVerticesKDTree> acc_;
+            time_point_type press_;
         
         
         public:
