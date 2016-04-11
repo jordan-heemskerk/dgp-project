@@ -1,6 +1,7 @@
 #include <OpenGP/SurfaceMesh/GL/SurfaceMeshRenderShaded.h>
 #include <OpenGP/SurfaceMesh/GL/SurfaceMeshRenderFlat.h>
 #include "ArcballWindow.h"
+#include "SurfaceMeshVerticesKDTree.h"
 #include <csc486a/closeness_constraint.hpp>
 #include <csc486a/rigid_constraint.hpp>
 #include <csc486a/solver.hpp>
@@ -8,6 +9,7 @@
 #include <deque>
 #include <utility>
 using namespace OpenGP;
+
 
 struct MainWindow : public ArcballWindow{
     SurfaceMesh mesh;
@@ -19,6 +21,13 @@ struct MainWindow : public ArcballWindow{
  
     MainWindow(int argc, char** argv) : ArcballWindow(__FILE__,400,400){
         if(argc!=2) mFatal("application requires one parameter! e.g. sphere.obj");
+
+        
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(GL_TRUE);
+        glDepthFunc(GL_ALWAYS);
+        glDepthRange(0.0f, 1.0f);
+        
         bool success = mesh.read(argv[1]);
         if(!success) mFatal() << "File not found: " << argv[1];
 
@@ -86,6 +95,51 @@ struct MainWindow : public ArcballWindow{
         for (auto && cc : ccs_) s_->add(cc);
         for (auto && rc : rcs_) s_->add(rc);
         
+
+        
+    }
+    
+    // get vertex from clicking
+    void mouse_press_callback(int button, int action, int mod) override {
+        
+        // do arc ball stuff first!
+        ArcballWindow::mouse_press_callback(button, action, mod);
+        
+        if (button == GLFW_MOUSE_BUTTON_LEFT) {
+            if (action == GLFW_PRESS) {
+                
+                // get cursor
+                double x, y;
+                glfwGetCursorPos(_window, &x, &y);
+                
+                // get viewport
+                GLint viewport[4];
+                glGetIntegerv(GL_VIEWPORT, viewport);
+                
+                // assume model is I and compute unprojection matrix
+                auto pm = scene._projection * scene._view;
+                auto unprojected = pm.inverse();
+                
+                float ogl_y = _height - y;
+                
+                // get depth value for mesh intersection
+                float z;
+                glReadPixels(x, ogl_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);
+                
+                // do the unprojection
+                Eigen::Vector4f win_pos((2*(x-viewport[0])/viewport[2])-1,(2*(ogl_y-viewport[1])/viewport[3])-1,(2*z)-1,1);
+                Eigen::Vector4f wc4 = unprojected * win_pos;
+            
+                // homogenuos coordinates -> Vec3
+                Eigen::Vector3f np_wc3 = Eigen::Vector3f(wc4(0)/wc4[3], wc4(1)/wc4[3], wc4(2)/wc4[3]);
+            
+                // Find closest vertex - TODO when should we build the index?
+                SurfaceMeshVerticesKDTree accelerator = SurfaceMeshVerticesKDTree(mesh);
+                SurfaceMesh::Vertex closest = accelerator.closest_vertex(np_wc3);
+                std::cout << "You clicked vertex with index: " << closest << std::endl;
+                
+            }
+        }
     }
     
     void key_callback(int key, int scancode, int action, int mods) override{
