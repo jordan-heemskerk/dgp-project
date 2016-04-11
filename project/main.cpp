@@ -6,6 +6,9 @@
 #include <OpenGP/SurfaceMesh/SurfaceMesh.h>
 #include <cstdlib>
 #include <cstring>
+#include <csc486a/circle_constraint.hpp>
+#include <csc486a/sphere_constraint.hpp>
+#include <optional.hpp>
 #include <deque>
 #include <iostream>
 #include <memory>
@@ -14,7 +17,6 @@
 #include <tuple>
 #include <unordered_map>
 #include <utility>
-
 
 namespace {
     

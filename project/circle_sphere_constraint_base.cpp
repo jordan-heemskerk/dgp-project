@@ -4,6 +4,7 @@
 #include <OpenGP/MLogger.h> /// mDebug() <<
 #include <cmath>
 
+#define DIM (3)
 namespace csc486a{
 
     circle_sphere_constraint_base::circle_sphere_constraint_base (const OpenGP::SurfaceMesh & mesh, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, type t) : vertices_constraint_base(mesh,std::move(vs),w), t_(t) { }
@@ -17,9 +18,10 @@ namespace csc486a{
         auto N = vs_.size();
 
         if(t_ == type::circle){
-
+            std::cout << "In circle case" << std::endl;
+        }else{
+            std::cout << "In sphere case" << std::endl;
         }
-
 
 
         return ps;
