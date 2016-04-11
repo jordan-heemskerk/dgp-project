@@ -9,7 +9,7 @@ namespace csc486a {
     void window_base::vertex_click (vertex_click_event) {   }
     
     
-    void window_base::add (constraint & c) {
+    void window_base::add (const constraint & c) {
         
         s_.add(c);
         

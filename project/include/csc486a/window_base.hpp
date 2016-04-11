@@ -43,7 +43,7 @@ namespace csc486a {
         
         
             virtual void vertex_click (vertex_click_event);
-            void add (constraint & c);
+            void add (const constraint & c);
         
         
             explicit window_base (OpenGP::SurfaceMesh mesh);
