@@ -1,11 +1,43 @@
 #include <csc486a/solver.hpp>
 #include <Eigen/Dense>
 #include <cstddef>
+#include <sstream>
 #include <stdexcept>
+#include <string>
 #include <utility>
 
 
 namespace csc486a {
+    
+    
+    static const std::string & message (Eigen::ComputationInfo i) {
+        
+        switch (i) {
+            
+            case Eigen::Success:{
+                static const std::string retr;
+                return retr;
+            }
+            case Eigen::NumericalIssue:{
+                static const std::string retr("The provided data did not satisfy the prerequisites");
+                return retr;
+            }
+            case Eigen::NoConvergence:{
+                static const std::string retr("Iterative procedure did not converge");
+                return retr;
+            }
+            case Eigen::InvalidInput:{
+                static const std::string retr("The inputs are invalid, or the algorithm has been improperly called");
+                return retr;
+            }
+            default:{
+                static const std::string retr("Unknown");
+                return retr;
+            }
+            
+        }
+        
+    }
     
     
     void solver::create_q () {
@@ -39,8 +71,14 @@ namespace csc486a {
         q_.emplace(row,n);
         q_->setFromTriplets(ts.begin(),ts.end());
         
-        solver_.emplace(q_->transpose()**q_);
-        if (solver_->info()!=Eigen::Success) throw std::runtime_error("Failed to create Cholesky factorization");
+        auto t=(q_->transpose()**q_).eval();
+        solver_.emplace(std::move(t));
+        auto info=solver_->info();
+        if (info==Eigen::Success) return;
+        
+        std::ostringstream ss;
+        ss << "Failed to create Cholesky factorization: " << message(info);
+        throw std::runtime_error(ss.str());
         
     }
     
@@ -86,7 +124,14 @@ namespace csc486a {
         
         //  Perform the global solve
         Eigen::MatrixX3f v(solver_->solve(q_->transpose()*p));
-        if (solver_->info()!=Eigen::Success) throw std::runtime_error("Cholesky solve failed");
+        auto info=solver_->info();
+        if (info!=Eigen::Success) {
+            
+            std::ostringstream ss;
+            ss << "Cholesky solve failed: " << message(info);
+            throw std::runtime_error(ss.str());
+            
+        }
         if (v.rows()!=mesh_.n_vertices()) throw std::logic_error("Wrong number of entries in matrix V");
         std::size_t row(0);
         for (auto && vec : mesh_.vertices()) {
