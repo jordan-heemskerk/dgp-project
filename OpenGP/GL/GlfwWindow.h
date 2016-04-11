@@ -9,7 +9,7 @@
 namespace OpenGP {
 //=============================================================================
 
-void glfw_error_callback(int error, const char* description){
+inline void glfw_error_callback(int error, const char* description){
     mFatal("ERROR%d: %s", error, description);
 }
 
