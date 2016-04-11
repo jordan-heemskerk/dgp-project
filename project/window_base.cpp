@@ -16,6 +16,13 @@ namespace csc486a {
     }
     
     
+    void window_base::remove (const constraint & c) noexcept {
+        
+        s_.remove(c);
+        
+    }
+    
+    
     window_base::window_base (OpenGP::SurfaceMesh mesh) : ArcballWindow("CSC486A",400,400), mesh_(std::move(mesh)), renderer_(mesh_), s_(mesh_) {
         
         mesh_.triangulate();

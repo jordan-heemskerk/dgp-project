@@ -1,5 +1,6 @@
 #include <csc486a/solver.hpp>
 #include <Eigen/Dense>
+#include <algorithm>
 #include <cstddef>
 #include <sstream>
 #include <stdexcept>
@@ -91,6 +92,15 @@ namespace csc486a {
         if (q_) throw std::logic_error("Cannot add constraints after solver has run");
         
         cs_.push_back(&c);
+        
+    }
+    
+    
+    void solver::remove (const constraint & c) noexcept {
+        
+        auto end=cs_.end();
+        auto iter=std::find(cs_.begin(),end,&c);
+        if (iter!=end) cs_.erase(iter);
         
     }
     
