@@ -89,7 +89,7 @@ namespace csc486a {
     
     void solver::add (const constraint & c) {
         
-        if (q_) throw std::logic_error("Cannot add constraints after solver has run");
+        q_=std::nullopt;
         
         cs_.push_back(&c);
         
