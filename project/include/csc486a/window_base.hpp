@@ -45,6 +45,9 @@ namespace csc486a {
             void add (constraint & c);
         
         
+            explicit window_base (OpenGP::SurfaceMesh mesh);
+        
+        
         private:
         
         
@@ -54,9 +57,6 @@ namespace csc486a {
         
         
         public:
-        
-        
-            explicit window_base (OpenGP::SurfaceMesh mesh);
         
         
             virtual void key_callback (int, int, int, int) override;
