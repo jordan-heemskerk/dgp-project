@@ -26,6 +26,7 @@ namespace csc486a {
         
         type t_;
         OpenGP::SurfaceMesh deformed_;
+        OpenGP::SurfaceMesh original_;
         float clamp_;
         
     protected:
