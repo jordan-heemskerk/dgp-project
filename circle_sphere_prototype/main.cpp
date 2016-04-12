@@ -10,8 +10,8 @@ void sphere(){
     int N = 6;
 
     //cloud of 3d points
-    Eigen::MatrixXf X2D(N,3);
-    X2D <<  2,0,0,
+    Eigen::MatrixXf X(N,3);
+    X <<  2,0,0,
             -2,0,0,
             0,2,0,
             0,-2,0,
@@ -19,29 +19,28 @@ void sphere(){
             0,0,-2;
 
     //calculate all sums needed in further calculations
-    //calculate all sums needed in further calculations
-    float sumX = X2D.col(0).array().sum();
-    float sumXSq = (X2D.col(0).array()*X2D.col(0).array()).sum();
-    float sumXCube = ((X2D.col(0).array()*X2D.col(0).array())*X2D.col(0).array()).sum();
+    float sumX = X.col(0).array().sum();
+    float sumXSq = (X.col(0).array()*X.col(0).array()).sum();
+    float sumXCube = ((X.col(0).array()*X.col(0).array())*X.col(0).array()).sum();
 
-    float sumY = X2D.col(1).array().sum();
-    float sumYSq = (X2D.col(1).array()*X2D.col(1).array()).sum();
-    float sumYCube = ((X2D.col(1).array()*X2D.col(1).array())*X2D.col(1).array()).sum();
+    float sumY = X.col(1).array().sum();
+    float sumYSq = (X.col(1).array()*X.col(1).array()).sum();
+    float sumYCube = ((X.col(1).array()*X.col(1).array())*X.col(1).array()).sum();
 
-    float sumZ = X2D.col(2).array().sum();
-    float sumZSq = (X2D.col(2).array()*X2D.col(2).array()).sum();
-    float sumZCube = ((X2D.col(2).array()*X2D.col(2).array())*X2D.col(2).array()).sum();
+    float sumZ = X.col(2).array().sum();
+    float sumZSq = (X.col(2).array()*X.col(2).array()).sum();
+    float sumZCube = ((X.col(2).array()*X.col(2).array())*X.col(2).array()).sum();
 
-    float sumXY = (X2D.col(0).array()*X2D.col(1).array()).sum();
-    float sumXZ = (X2D.col(0).array()*X2D.col(2).array()).sum();
-    float sumYZ = (X2D.col(1).array()*X2D.col(2).array()).sum();
+    float sumXY = (X.col(0).array()*X.col(1).array()).sum();
+    float sumXZ = (X.col(0).array()*X.col(2).array()).sum();
+    float sumYZ = (X.col(1).array()*X.col(2).array()).sum();
 
-    float sumXSqY = ((X2D.col(0).array()*X2D.col(0).array())*X2D.col(1).array()).sum();
-    float sumXYSq = (X2D.col(0).array()*(X2D.col(1).array()*X2D.col(1).array())).sum();
-    float sumXZSq = (X2D.col(0).array()*(X2D.col(2).array()*X2D.col(2).array())).sum();
-    float sumYZSq = (X2D.col(1).array()*(X2D.col(2).array()*X2D.col(2).array())).sum();
-    float sumYSqZ = ((X2D.col(1).array()*X2D.col(1).array())*X2D.col(2).array()).sum();
-    float sumXSqZ = ((X2D.col(0).array()*X2D.col(0).array())*X2D.col(2).array()).sum();
+    float sumXSqY = ((X.col(0).array()*X.col(0).array())*X.col(1).array()).sum();
+    float sumXYSq = (X.col(0).array()*(X.col(1).array()*X.col(1).array())).sum();
+    float sumXZSq = (X.col(0).array()*(X.col(2).array()*X.col(2).array())).sum();
+    float sumYZSq = (X.col(1).array()*(X.col(2).array()*X.col(2).array())).sum();
+    float sumYSqZ = ((X.col(1).array()*X.col(1).array())*X.col(2).array()).sum();
+    float sumXSqZ = ((X.col(0).array()*X.col(0).array())*X.col(2).array()).sum();
 
     std::cout << "sumX: " << sumX << std::endl;
     std::cout << "sumY: " << sumY << std::endl;
@@ -100,12 +99,12 @@ void sphere(){
          d2,
          d3;
 
-    Eigen::Vector3f X = A.inverse()*B;
+    Eigen::Vector3f Y = A.inverse()*B;
 
     //calculate
-    float xBar = X(0);
-    float yBar = X(1);
-    float zBar = X(2);
+    float xBar = Y(0);
+    float yBar = Y(1);
+    float zBar = Y(2);
 
     std::cout << "A: " << std::endl;
     std::cout << A << std::endl;
@@ -128,24 +127,24 @@ void circle(){
     int N = 4;
 
     //square of 2d points
-    Eigen::MatrixXf X2D(N,2);
-    X2D <<  0,0,
+    Eigen::MatrixXf X(N,2);
+    X <<  0,0,
             2,0,
             2,2,
             0,2;
 
     //calculate all sums needed in further calculations
-    float sumX = X2D.col(0).array().sum();
-    float sumXSq = (X2D.col(0).array()*X2D.col(0).array()).sum();
-    float sumXCube = ((X2D.col(0).array()*X2D.col(0).array())*X2D.col(0).array()).sum();
+    float sumX = X.col(0).array().sum();
+    float sumXSq = (X.col(0).array()*X.col(0).array()).sum();
+    float sumXCube = ((X.col(0).array()*X.col(0).array())*X.col(0).array()).sum();
 
-    float sumY = X2D.col(1).array().sum();
-    float sumYSq = (X2D.col(1).array()*X2D.col(1).array()).sum();
-    float sumYCube = ((X2D.col(1).array()*X2D.col(1).array())*X2D.col(1).array()).sum();
+    float sumY = X.col(1).array().sum();
+    float sumYSq = (X.col(1).array()*X.col(1).array()).sum();
+    float sumYCube = ((X.col(1).array()*X.col(1).array())*X.col(1).array()).sum();
 
-    float sumXY = (X2D.col(0).array()*X2D.col(1).array()).sum();
-    float sumXSqY = ((X2D.col(0).array()*X2D.col(0).array())*X2D.col(1).array()).sum();
-    float sumXYSq = (X2D.col(0).array()*(X2D.col(1).array()*X2D.col(1).array())).sum();
+    float sumXY = (X.col(0).array()*X.col(1).array()).sum();
+    float sumXSqY = ((X.col(0).array()*X.col(0).array())*X.col(1).array()).sum();
+    float sumXYSq = (X.col(0).array()*(X.col(1).array()*X.col(1).array())).sum();
 
     std::cout << "sumX: " << sumX << std::endl;
     std::cout << "sumY: " << sumY << std::endl;

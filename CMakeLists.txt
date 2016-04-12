@@ -25,7 +25,7 @@ include(cmake/ConfigureCompiler.cmake)
 #================================
 # Subdirectories.
 #================================
-#add_subdirectory(data)
+add_subdirectory(data)
 #add_subdirectory(lab01_eigen)
 #add_subdirectory(lab01_triangle)
 #add_subdirectory(lab02_reconstruction)
@@ -38,3 +38,4 @@ include(cmake/ConfigureCompiler.cmake)
 add_subdirectory(project)
 add_subdirectory(rigid_similarity_prototype)
 add_subdirectory(circle_sphere_prototype)
+

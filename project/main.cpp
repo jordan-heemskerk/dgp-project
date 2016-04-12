@@ -1,8 +1,9 @@
 #include <csc486a/closeness_constraint.hpp>
-#include <csc486a/scaling_constraint.hpp>
-#include <csc486a/window_base.hpp>
-#include <OpenGP/SurfaceMesh/SurfaceMesh.h>
-#include <cstdlib>
+#include <csc486a/rigid_constraint.hpp>
+#include <csc486a/circle_constraint.hpp>
+#include <csc486a/sphere_constraint.hpp>
+#include <csc486a/solver.hpp>
+#include <optional.hpp>
 #include <deque>
 #include <iostream>
 #include <sstream>
@@ -10,7 +11,6 @@
 #include <tuple>
 #include <unordered_map>
 #include <utility>
-
 
 namespace {
     
