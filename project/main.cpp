@@ -1,10 +1,13 @@
 #include <csc486a/closeness_constraint.hpp>
 #include <csc486a/scaling_constraint.hpp>
 #include <csc486a/window_base.hpp>
+#include <OpenGP/GL/GlfwWindow.h>
 #include <OpenGP/SurfaceMesh/SurfaceMesh.h>
 #include <cstdlib>
+#include <cstring>
 #include <deque>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <tuple>
@@ -68,27 +71,41 @@ namespace {
 }
 
 
-static void main_impl (int argc, char ** argv) {
+static std::unique_ptr<OpenGP::GlfwWindow> get_window (int argc, char ** argv) {
     
-    if (argc!=2) {
+    if (argc!=3) {
         
         std::ostringstream ss;
-        ss << "Expected 1 command line parameter, got " << (argc-1);
+        ss << "Expected 2 command line parameters, got " << (argc-1);
         throw std::runtime_error(ss.str());
         
     }
     
     OpenGP::SurfaceMesh mesh;
-    if (!mesh.read(argv[1])) {
+    const char * file=argv[2];
+    if (!mesh.read(file)) {
         
         std::ostringstream ss;
-        ss << "Failed reading file " << argv[1];
+        ss << "Failed reading file " << file;
         throw std::runtime_error(ss.str());
         
     }
     
-    test_window win(std::move(mesh));
-    if (win.run()!=0) throw std::runtime_error("Window reported error");
+    const char * name=argv[1];
+    using pointer=std::unique_ptr<OpenGP::GlfwWindow>;
+    if (std::strcmp(name,"test")==0) return pointer(new test_window(std::move(mesh)));
+    
+    std::ostringstream ss;
+    ss << "Could not find a demo named \"" << name << "\"";
+    throw std::runtime_error(ss.str());
+    
+}
+
+
+static void main_impl (int argc, char ** argv) {
+    
+    auto ptr=get_window(argc,argv);
+    if (ptr->run()!=0) throw std::runtime_error("Window reported error");
     
 }
 
