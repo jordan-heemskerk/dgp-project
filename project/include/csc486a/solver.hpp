@@ -71,10 +71,6 @@ namespace csc486a {
             /**
              *  Adds a constraint to the solver.
              *
-             *  This method must not be called after the
-             *  solver has already been used for at least
-             *  one iteration.
-             *
              *  The added constraint must operate on the
              *  same mesh used to construct this solver
              *  or the behaviour is undefined.
@@ -82,10 +78,18 @@ namespace csc486a {
              *  \param [in] c
              *      A reference to the constraint to add.
              *      This reference must remain valid for the
-             *      lifetime of the solver object or the behaviour
-             *      is undefined.
+             *      lifetime of the solver object or until
+             *      it is removed or the behaviour is undefined.
              */
             void add (const constraint & c);
+            /**
+             *  Removes a constraint from the solver.
+             *
+             *  \param [in] c
+             *      A reference to the constraint to remove.
+             */
+            void remove (const constraint & c) noexcept;
+        
         
         
             /**
