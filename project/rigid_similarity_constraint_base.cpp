@@ -56,7 +56,7 @@ namespace csc486a {
         Eigen::Matrix3f S_xy = (centered_y.adjoint() * centered_x)/float(Y.rows());
         
         // SVD
-        Eigen::JacobiSVD<Eigen::MatrixXf> svd(S_xy, Eigen::ComputeThinU | Eigen::ComputeThinV);
+        Eigen::JacobiSVD<Eigen::MatrixXf> svd(S_xy, Eigen::ComputeFullU | Eigen::ComputeFullV);
         Eigen::Matrix3f U = svd.matrixU();
         Eigen::Matrix3f D = svd.singularValues().asDiagonal(); //these should be sorted
         Eigen::Matrix3f V = svd.matrixV();
