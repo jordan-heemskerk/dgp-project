@@ -22,7 +22,7 @@ namespace csc486a {
     }
     
     
-    rigid_similarity_constraint_base::rigid_similarity_constraint_base (const OpenGP::SurfaceMesh & mesh, OpenGP::SurfaceMesh deformed, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, rigid_similarity_constraint_base::type t, float clamp) : vertices_constraint_base(mesh, std::move(vs), w), deformed_(std::move(deformed)), t_(t), clamp_(clamp) { }
+    rigid_similarity_constraint_base::rigid_similarity_constraint_base (const OpenGP::SurfaceMesh & mesh, OpenGP::SurfaceMesh original, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, rigid_similarity_constraint_base::type t, float clamp) : vertices_constraint_base(mesh, std::move(vs), w), original_(std::move(original)), t_(t), clamp_(clamp) { }
     
     rigid_similarity_constraint_base::points_type rigid_similarity_constraint_base::project(points_type ps) const {
         
@@ -32,15 +32,15 @@ namespace csc486a {
         // number of points in this constraint
         auto n_pts = vs_.size();
         
-        auto dvpoints = deformed_.get_vertex_property<Eigen::Vector3f>("v:point");
+        auto dvpoints = original_.get_vertex_property<Eigen::Vector3f>("v:point");
         
         // load points from std::vector to matrix of positions
         Eigen::MatrixXf X(n_pts, DIM);
         Eigen::MatrixXf Y(n_pts, DIM);
         std::size_t row_x(0);
         for (auto && v : vs_) {
-            X.row(row_x) = vpoints_[v];
-            Y.row(row_x) = dvpoints[v];
+            Y.row(row_x) = vpoints_[v];
+            X.row(row_x) = dvpoints[v];
             row_x++;
         }
         

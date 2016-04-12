@@ -1,5 +1,6 @@
 #include <csc486a/closeness_constraint.hpp>
 #include <csc486a/scaling_constraint.hpp>
+#include <csc486a/rigid_constraint.hpp>
 #include <csc486a/window_base.hpp>
 #include <OpenGP/GL/GlfwWindow.h>
 #include <OpenGP/SurfaceMesh/SurfaceMesh.h>
@@ -17,6 +18,164 @@
 
 namespace {
     
+    
+    class rigid_demo : public csc486a::window_base {
+        
+        private:
+        
+        std::deque<csc486a::rigid_constraint> rcs_;
+        std::deque<csc486a::closeness_constraint> ccs_;
+        
+        protected:
+        
+        
+        public:
+        
+        
+        // use with quad2
+        explicit rigid_demo (OpenGP::SurfaceMesh mesh) : csc486a::window_base(std::move(mesh)) {
+            
+            
+            // copy the original to displaced
+            OpenGP::SurfaceMesh original = OpenGP::SurfaceMesh(mesh_);
+
+            // displace the mesh!
+            auto vpoints = mesh_.get_vertex_property<Eigen::Vector3f>("v:point");
+            if (!vpoints) throw std::logic_error("vpoints doesn't exist");
+            
+            Eigen::Vector3f offset(0,-2,0);
+            
+            // move some vertices around
+            vpoints[OpenGP::SurfaceMesh::Vertex(0)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(35)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(19)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(47)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(4)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(48)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(20)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(36)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(3)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(27)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(79)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(63)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(78)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(28)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(70)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(51)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(69)] += offset;
+            vpoints[OpenGP::SurfaceMesh::Vertex(26)] += offset;
+            
+            // define handle
+            OpenGP::SurfaceMesh::Vertex_property<bool> is_handle = mesh_.add_vertex_property<bool>("v:is_handle", false);
+            is_handle[OpenGP::SurfaceMesh::Vertex(0)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(35)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(19)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(47)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(4)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(48)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(20)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(36)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(3)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(27)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(79)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(63)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(78)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(28)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(70)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(51)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(69)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(26)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(30)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(74)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(56)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(66)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(37)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(77)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(60)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(67)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(34)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(1)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(31)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(15)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(43)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(5)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(41)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(13)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(29)] = true;
+            is_handle[OpenGP::SurfaceMesh::Vertex(2)] = true;
+            
+            
+            // closeness on handles
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(0),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(35),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(19),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(47),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(4),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(48),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(20),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(36),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(3),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(27),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(79),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(63),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(78),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(28),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(70),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(51),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(69),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(26),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(30),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(74),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(56),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(66),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(37),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(77),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(60),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(67),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(34),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(1),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(31),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(15),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(43),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(5),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(41),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(13),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(29),1.0f);
+            ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(2),1.0f);
+            
+            
+            //loop over onerings and add constraint for each one
+            unsigned int curr = 0;
+            std::vector<OpenGP::SurfaceMesh::Vertex> onering;
+            onering.reserve(10);
+            for (auto && v : mesh.vertices()) {
+                
+             //   if (is_handle[v]) continue;
+                
+                onering.clear();
+                onering.push_back(v);
+
+                for (auto && he : mesh.halfedges(v)) {
+                    onering.push_back(mesh.to_vertex(he));
+                }
+
+                rcs_.emplace_back(mesh_, original, onering, 1.0f);
+                add(rcs_.back());
+                
+                //progress report
+                if (curr % (mesh.n_vertices()/20) == 0) {
+                    float prog = (curr * 100.0)/mesh.n_vertices();
+                    std::cout << "Onering Progress: " << prog << std::endl;
+                }
+                curr++;
+
+            }
+            
+            //for (auto && cc : ccs_) add(cc);
+
+            
+        }
+    };
     
     class test_window : public csc486a::window_base {
         
@@ -94,6 +253,7 @@ static std::unique_ptr<OpenGP::GlfwWindow> get_window (int argc, char ** argv) {
     const char * name=argv[1];
     using pointer=std::unique_ptr<OpenGP::GlfwWindow>;
     if (std::strcmp(name,"test")==0) return pointer(new test_window(std::move(mesh)));
+    if (std::strcmp(name,"rigid")==0) return pointer(new rigid_demo(std::move(mesh)));
     
     std::ostringstream ss;
     ss << "Could not find a demo named \"" << name << "\"";
