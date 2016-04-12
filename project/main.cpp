@@ -1,4 +1,5 @@
 #include <csc486a/closeness_constraint.hpp>
+#include <csc486a/plane_constraint.hpp>
 #include <csc486a/scaling_constraint.hpp>
 #include <csc486a/rigid_constraint.hpp>
 #include <csc486a/window_base.hpp>
@@ -17,6 +18,17 @@
 #include <tuple>
 #include <unordered_map>
 #include <utility>
+#include <vector>
+
+
+static std::vector<OpenGP::SurfaceMesh::Vertex> vertices (const OpenGP::SurfaceMesh & mesh) {
+    
+    std::vector<OpenGP::SurfaceMesh::Vertex> retr;
+    for (auto && v : mesh.vertices()) retr.push_back(v);
+    
+    return retr;
+    
+}
 
 namespace {
     
@@ -285,6 +297,28 @@ namespace {
         
     };
     
+    
+    class plane_demo : public csc486a::window_base {
+        
+        
+        private:
+        
+        
+            csc486a::plane_constraint c_;
+        
+        
+        public:
+        
+        
+        explicit plane_demo (OpenGP::SurfaceMesh mesh) : csc486a::window_base(std::move(mesh)), c_(mesh_,vertices(mesh_),1.0f) {
+            
+            add(c_);
+            
+        }
+        
+        
+    };
+    
 }
 
 
@@ -314,6 +348,7 @@ static std::unique_ptr<OpenGP::GlfwWindow> get_window (int argc, char ** argv) {
     if (std::strcmp(name,"sphere")==0) return pointer(new sphere_demo(std::move(mesh)));
     if (std::strcmp(name,"rigid")==0) return pointer(new rigid_demo(std::move(mesh), file));
     if (std::strcmp(name,"pick")==0) return pointer(new point_pick(std::move(mesh)));
+    if (std::strcmp(name,"plane")==0) return pointer(new plane_demo(std::move(mesh)));
     
     std::ostringstream ss;
     ss << "Could not find a demo named \"" << name << "\"";
