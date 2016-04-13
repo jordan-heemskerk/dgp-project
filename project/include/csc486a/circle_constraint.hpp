@@ -12,13 +12,13 @@
 namespace csc486a {
 
 
-    class sphere_constraint : public circle_sphere_constraint_base {
+    class circle_constraint : public circle_sphere_constraint_base {
 
 
         public:
 
 
-        sphere_constraint (const OpenGP::SurfaceMesh & mesh, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w);
+        circle_constraint (const OpenGP::SurfaceMesh & mesh, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w);
 
 
     };

@@ -20,7 +20,53 @@
 
 namespace {
     
-    
+
+    class sphere_demo : public csc486a::window_base {
+        private:
+
+        std::deque<csc486a::closeness_constraint> ccs_;
+        std::deque<csc486a::rigid_constraint> rcs_;
+        //std::optional<csc486a::line_constraint> lc_;
+        std::deque<csc486a::circle_constraint> circlecs_;
+
+        protected:
+
+        public:
+
+        explicit sphere_demo (OpenGP::SurfaceMesh mesh) : csc486a::window_base(std::move(mesh)) {
+            //closeness constraints
+            std::vector<OpenGP::SurfaceMesh::Vertex> va;
+            for (auto && v : mesh_.vertices()) {
+               ccs_.emplace_back(mesh_,v,1.0f);
+               va.push_back(v);
+            }
+
+            //circle constraint on 40 vertices
+            std::vector<OpenGP::SurfaceMesh::Vertex> vs;
+            size_t itt = 0;
+            for(auto && v : mesh_.vertices()){
+                if(itt > 50) break;
+                vs.push_back(v);
+                //itt++;
+            }
+
+
+            circlecs_.emplace_back(mesh_,vs,1.0f);
+
+
+
+            // add to solver
+    //                    s_.emplace(mesh);
+            //for (auto && cc : ccs_) s_->add(cc);
+            for (auto && rc : circlecs_) add(rc);
+    //                    for (auto && rc : rcs_) s_->add(rc);
+
+
+        }
+
+    };
+
+
     class rigid_demo : public csc486a::window_base {
         
         private:
@@ -304,6 +350,7 @@ static std::unique_ptr<OpenGP::GlfwWindow> get_window (int argc, char ** argv) {
     using pointer=std::unique_ptr<OpenGP::GlfwWindow>;
     if (std::strcmp(name,"test")==0) return pointer(new test_window(std::move(mesh)));
     if (std::strcmp(name,"rigid")==0) return pointer(new rigid_demo(std::move(mesh)));
+    if (std::strcmp(name,"sphere")==0) return pointer(new sphere_demo(std::move(mesh)));
     
     std::ostringstream ss;
     ss << "Could not find a demo named \"" << name << "\"";
