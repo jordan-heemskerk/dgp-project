@@ -45,10 +45,12 @@ namespace csc486a {
             virtual void vertex_click (vertex_click_event);
             void add (const constraint & c);
             void remove (const constraint & c) noexcept;
+            OpenGP::SurfaceMeshRenderFlat renderer_;
+            solver s_;
         
+            explicit window_base (OpenGP::SurfaceMesh mesh, bool defer_triangulation = false);
         
-            explicit window_base (OpenGP::SurfaceMesh mesh);
-        
+            void add_mesh_to_scene();
         
         private:
         
@@ -57,17 +59,15 @@ namespace csc486a {
             using time_point_type=clock_type::time_point;
         
         
-            OpenGP::SurfaceMeshRenderFlat renderer_;
-            solver s_;
+
             std::optional<OpenGP::SurfaceMeshVerticesKDTree> acc_;
             time_point_type press_;
         
         
         public:
         
-        
-            virtual void key_callback (int, int, int, int) override;
-            virtual void mouse_press_callback (int, int, int) override;
+        virtual void key_callback (int, int, int, int) override;
+        virtual void mouse_press_callback (int, int, int) override;
         
         
     };

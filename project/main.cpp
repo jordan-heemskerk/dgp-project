@@ -26,26 +26,12 @@ namespace {
         std::deque<csc486a::rigid_constraint> rcs_;
         std::deque<csc486a::closeness_constraint> ccs_;
         
-        protected:
-        
-        
-        public:
-        
-        
-        // use with quad2
-        explicit rigid_demo (OpenGP::SurfaceMesh mesh) : csc486a::window_base(std::move(mesh)) {
+        void move_handle(Eigen::Vector3f offset) {
             
-            
-            // copy the original to displaced
-            OpenGP::SurfaceMesh original = OpenGP::SurfaceMesh(mesh_);
-
             // displace the mesh!
             auto vpoints = mesh_.get_vertex_property<Eigen::Vector3f>("v:point");
             if (!vpoints) throw std::logic_error("vpoints doesn't exist");
             
-            Eigen::Vector3f offset(0,-2,0);
-            
-            // move some vertices around
             vpoints[OpenGP::SurfaceMesh::Vertex(0)] += offset;
             vpoints[OpenGP::SurfaceMesh::Vertex(35)] += offset;
             vpoints[OpenGP::SurfaceMesh::Vertex(19)] += offset;
@@ -64,6 +50,28 @@ namespace {
             vpoints[OpenGP::SurfaceMesh::Vertex(51)] += offset;
             vpoints[OpenGP::SurfaceMesh::Vertex(69)] += offset;
             vpoints[OpenGP::SurfaceMesh::Vertex(26)] += offset;
+        }
+        
+        protected:
+        
+        
+        public:
+        
+        
+        // use with quad2
+        // here we defer the triangulation so that one rings are done on the quad mesh
+        explicit rigid_demo (OpenGP::SurfaceMesh mesh) : csc486a::window_base(std::move(mesh), true) {
+            
+            
+            // copy the original to displaced
+            OpenGP::SurfaceMesh original = OpenGP::SurfaceMesh(mesh_);
+
+
+            
+            move_handle(Eigen::Vector3f(0,-0.4,-0.4));
+            
+            // move some vertices around
+
             
             // define handle
             OpenGP::SurfaceMesh::Vertex_property<bool> is_handle = mesh_.add_vertex_property<bool>("v:is_handle", false);
@@ -149,14 +157,14 @@ namespace {
             std::vector<OpenGP::SurfaceMesh::Vertex> onering;
             onering.reserve(10);
             for (auto && v : mesh.vertices()) {
-                
-             //   if (is_handle[v]) continue;
-                
+
+                //if (is_handle[v]) continue;
                 onering.clear();
                 onering.push_back(v);
 
                 for (auto && he : mesh.halfedges(v)) {
-                    onering.push_back(mesh.to_vertex(he));
+                    OpenGP::SurfaceMesh::Vertex v_or = mesh.to_vertex(he);
+                    onering.push_back(v_or);
                 }
 
                 rcs_.emplace_back(mesh_, original, onering, 1.0f);
@@ -168,11 +176,50 @@ namespace {
                     std::cout << "Onering Progress: " << prog << std::endl;
                 }
                 curr++;
-
             }
             
             //for (auto && cc : ccs_) add(cc);
-
+            add_mesh_to_scene();
+            
+        }
+        
+        
+        void key_callback (int key, int scancode, int action, int mods) {
+            
+            window_base::key_callback(key, scancode, action, mods);
+            
+            Eigen::Vector3f offset;
+            
+            if ((key==GLFW_KEY_UP) && (action==GLFW_RELEASE)) {
+                offset = Eigen::Vector3f(0,-0.1,0);
+                move_handle(offset);
+                mesh_.update_face_normals();
+                renderer_.init_data();
+                
+            }
+            
+            if ((key==GLFW_KEY_LEFT) && (action==GLFW_RELEASE)) {
+                offset = Eigen::Vector3f(0,0,-0.1);
+                move_handle(offset);
+                mesh_.update_face_normals();
+                renderer_.init_data();
+            }
+            
+            if ((key==GLFW_KEY_DOWN) && (action==GLFW_RELEASE)) {
+                offset = Eigen::Vector3f(0,0.1,0);
+                move_handle(offset);
+                mesh_.update_face_normals();
+                renderer_.init_data();
+            }
+            
+            if ((key==GLFW_KEY_RIGHT) && (action==GLFW_RELEASE)) {
+                offset = Eigen::Vector3f(0,0,0.1);
+                move_handle(offset);
+                mesh_.update_face_normals();
+                renderer_.init_data();
+            }
+            
+            
             
         }
     };
