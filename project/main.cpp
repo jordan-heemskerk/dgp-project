@@ -180,7 +180,7 @@ namespace {
             
         }
         
-#define IT 8
+#define IT 5
         void key_callback (int key, int scancode, int action, int mods) {
             
             window_base::key_callback(key, scancode, action, mods);
