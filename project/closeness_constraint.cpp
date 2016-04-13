@@ -21,7 +21,7 @@ namespace csc486a {
     closeness_constraint::points_type closeness_constraint::project (points_type ps) const {
         
         ps.clear();
-        ps.push_back(p_);
+        ps.push_back(vpoints_[v_]*w_);
         
         return ps;
         

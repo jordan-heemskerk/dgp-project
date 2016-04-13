@@ -22,12 +22,15 @@ namespace csc486a {
         
     }
     
-    
-    window_base::window_base (OpenGP::SurfaceMesh mesh) : ArcballWindow("CSC486A",400,400), mesh_(std::move(mesh)), renderer_(mesh_), s_(mesh_) {
-        
+    void window_base::add_mesh_to_scene() {
         mesh_.triangulate();
         mesh_.update_face_normals();
         scene.add(renderer_);
+    }
+    
+    window_base::window_base (OpenGP::SurfaceMesh mesh, bool defer_triangulate) : ArcballWindow("CSC486A",400,400), mesh_(std::move(mesh)), renderer_(mesh_), s_(mesh_) {
+        
+        if (!defer_triangulate) add_mesh_to_scene();
         
     }
     
