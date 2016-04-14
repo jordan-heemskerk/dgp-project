@@ -37,9 +37,8 @@ namespace {
         private:
 
         std::deque<csc486a::closeness_constraint> ccs_;
-        std::deque<csc486a::rigid_constraint> rcs_;
         //std::optional<csc486a::line_constraint> lc_;
-        std::deque<csc486a::circle_constraint> circlecs_;
+        std::deque<csc486a::sphere_constraint> spherecs_;
 
         protected:
 
@@ -53,7 +52,7 @@ namespace {
                va.push_back(v);
             }
 
-            //circle constraint on 40 vertices
+            //sphere constraint on 40 vertices
             std::vector<OpenGP::SurfaceMesh::Vertex> vs;
             size_t itt = 0;
             for(auto && v : mesh_.vertices()){
@@ -63,17 +62,57 @@ namespace {
             }
 
 
-            circlecs_.emplace_back(mesh_,vs,1.0f);
+            spherecs_.emplace_back(mesh_,vs,1.0f);
 
 
 
             // add to solver
     //                    s_.emplace(mesh);
             //for (auto && cc : ccs_) s_->add(cc);
-            for (auto && rc : circlecs_) add(rc);
+            for (auto && rc : spherecs_) add(rc);
     //                    for (auto && rc : rcs_) s_->add(rc);
 
 
+        }
+
+    };
+
+    class circle_demo : public csc486a::window_base {
+        private:
+
+        std::deque<csc486a::circle_constraint> circlecs_;
+        std::deque<csc486a::closeness_constraint> ccs_;
+        protected:
+
+        public:
+
+        explicit circle_demo (OpenGP::SurfaceMesh mesh) : csc486a::window_base(std::move(mesh)) {
+            //closeness constraints
+            std::vector<OpenGP::SurfaceMesh::Vertex> va;
+            for (auto && v : mesh_.vertices()) {
+               ccs_.emplace_back(mesh_,v,1.0f);
+               va.push_back(v);
+            }
+
+            //first run the plane operation on the handles
+
+            //select set of vertices to be handle
+            std::vector<OpenGP::SurfaceMesh::Vertex> vc;
+
+            size_t itt = 0;
+
+            for(auto && v : mesh_.vertices()){
+                if(itt == 17 || itt == 27 || itt == 122 || itt == 115 || itt == 118 || itt == 191) vc.push_back(v);
+
+                itt++;
+            }
+
+            //add constraint
+            circlecs_.emplace_back(mesh_,vc,1.0f);
+
+            //add the constraint to the constraints set
+            for (auto && cc : ccs_) add(cc);
+            for (auto && cc : circlecs_) add(cc);
         }
 
     };
@@ -152,7 +191,7 @@ namespace {
             for (auto && v_i : static_handle) ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(v_i),1.0f);
             
             //loop over onerings and add constraint for each one. weight this less than holding the handles
-            unsigned int curr = 0;
+//            unsigned int curr = 0;
             std::vector<OpenGP::SurfaceMesh::Vertex> onering;
             onering.reserve(10); // should be sufficient for quad and triangle
             for (auto && v : mesh.vertices()) {
@@ -366,6 +405,7 @@ static std::unique_ptr<OpenGP::GlfwWindow> get_window (int argc, char ** argv) {
     if (std::strcmp(name,"rigid")==0) return pointer(new rigid_demo(std::move(mesh), file));
     if (std::strcmp(name,"pick")==0) return pointer(new point_pick(std::move(mesh)));
     if (std::strcmp(name,"plane")==0) return pointer(new plane_demo(std::move(mesh)));
+    if (std::strcmp(name,"circle")==0) return pointer(new circle_demo(std::move(mesh)));
     
     std::ostringstream ss;
     ss << "Could not find a demo named \"" << name << "\"";

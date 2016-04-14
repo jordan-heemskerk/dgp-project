@@ -11,7 +11,11 @@ namespace csc486a{
     circle_sphere_constraint_base::circle_sphere_constraint_base (const OpenGP::SurfaceMesh & mesh, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, type t) : vertices_constraint_base(mesh,std::move(vs),w), t_(t) { }
 
     circle_sphere_constraint_base::points_type circle_sphere_constraint_base::project (points_type ps) const {
-
+        if(t_ == csc486a::circle_sphere_constraint_base::type::circle){
+            std::cout << "Circle" << std::endl;
+        }else{
+            std::cout << "Sphere" << std::endl;
+         }
         //just in case
         ps.clear();
 
@@ -24,14 +28,6 @@ namespace csc486a{
             X.row(row_x) = vpoints_[v];
             row_x++;
         }
-
-//        Eigen::MatrixXf X(6,3);
-//        X   <<  1,0,0,
-//                -1,0,0,
-//                0,1,0,
-//                0,-1,0,
-//                0,0,1,
-//                0,0,-1;
 
         std::cout << X << std::endl;
 
@@ -141,7 +137,6 @@ namespace csc486a{
             auto c2p = vpoints_[v] - c;
             ps.emplace_back(c + c2p.normalized()*radius);
         }
-
 
         return ps;
     }
