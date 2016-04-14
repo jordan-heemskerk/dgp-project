@@ -37,7 +37,6 @@ namespace {
         private:
 
         std::deque<csc486a::closeness_constraint> ccs_;
-        //std::optional<csc486a::line_constraint> lc_;
         std::deque<csc486a::sphere_constraint> spherecs_;
 
         protected:
@@ -64,13 +63,8 @@ namespace {
 
             spherecs_.emplace_back(mesh_,vs,1.0f);
 
-
-
-            // add to solver
-    //                    s_.emplace(mesh);
-            //for (auto && cc : ccs_) s_->add(cc);
+            //add to solver
             for (auto && rc : spherecs_) add(rc);
-    //                    for (auto && rc : rcs_) s_->add(rc);
 
 
         }
