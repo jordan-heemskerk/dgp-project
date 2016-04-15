@@ -67,6 +67,10 @@ To control single iterations of the algorithm you can press space bar. Depending
 ./project rigid bunny.obj
 ./project rigid quad3.obj
 
+./project similar quad2.obj # must use only these meshes to have handles defined
+./project similar bunny.obj
+./project similar quad3.obj
+
 ./project sphere bunny.obj # project all vertices onto the best fitting sphere
 ./project sphere dodeca.obj 
 
