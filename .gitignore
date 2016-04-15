@@ -1,2 +1,11 @@
 /CMakeLists.txt.user
 .DS_Store
+*Makefile
+*cmake*
+*CMake*
+!*CMakeLists.txt
+*.obj
+!data/*.obj
+project/project
+*.dSYM*
+*/doc/*
