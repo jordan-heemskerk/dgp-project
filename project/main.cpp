@@ -2,6 +2,7 @@
 #include <csc486a/plane_constraint.hpp>
 #include <csc486a/scaling_constraint.hpp>
 #include <csc486a/rigid_constraint.hpp>
+#include <csc486a/plane_constraint.hpp>
 #include <csc486a/window_base.hpp>
 #include <OpenGP/GL/GlfwWindow.h>
 #include <OpenGP/SurfaceMesh/SurfaceMesh.h>
@@ -83,12 +84,16 @@ namespace {
         explicit circle_demo (OpenGP::SurfaceMesh mesh) : csc486a::window_base(std::move(mesh)) {
             //closeness constraints
             std::vector<OpenGP::SurfaceMesh::Vertex> va;
+            size_t it = 0;
             for (auto && v : mesh_.vertices()) {
-               ccs_.emplace_back(mesh_,v,1.0f);
+               //if(it == 17 || it == 27 || it == 122 || it == 115 || it == 118 || it == 191) continue;
+               ccs_.emplace_back(mesh_,v,0.1f);
                va.push_back(v);
+               it++;
             }
 
             //first run the plane operation on the handles
+
 
             //select set of vertices to be handle
             std::vector<OpenGP::SurfaceMesh::Vertex> vc;
@@ -97,7 +102,8 @@ namespace {
 
             for(auto && v : mesh_.vertices()){
                 if(itt == 17 || itt == 27 || itt == 122 || itt == 115 || itt == 118 || itt == 191) vc.push_back(v);
-
+//                if(itt>100)continue;
+//                vc.push_back(v);
                 itt++;
             }
 
