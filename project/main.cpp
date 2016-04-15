@@ -58,15 +58,14 @@ namespace {
             for(auto && v : mesh_.vertices()){
                 if(itt > 50) break;
                 vs.push_back(v);
-                //itt++;
+                //itt++; //for combo
             }
-
 
             spherecs_.emplace_back(mesh_,vs,1.0f);
 
             //add to solver
             for (auto && rc : spherecs_) add(rc);
-
+            //for(auto && ccs : ccs_) add(ccs); //for combo
 
         }
 
@@ -76,6 +75,7 @@ namespace {
         private:
 
         std::deque<csc486a::circle_constraint> circlecs_;
+        std::deque<csc486a::circle_constraint> circlecs2_;
         std::deque<csc486a::closeness_constraint> ccs_;
         protected:
 
@@ -87,23 +87,27 @@ namespace {
             size_t it = 0;
             for (auto && v : mesh_.vertices()) {
                //if(it == 17 || it == 27 || it == 122 || it == 115 || it == 118 || it == 191) continue;
-               ccs_.emplace_back(mesh_,v,0.1f);
+               ccs_.emplace_back(mesh_,v,1.0f);
                va.push_back(v);
                it++;
             }
 
-            //first run the plane operation on the handles
-
-
             //select set of vertices to be handle
             std::vector<OpenGP::SurfaceMesh::Vertex> vc;
-
+            std::vector<OpenGP::SurfaceMesh::Vertex> vc1;
             size_t itt = 0;
 
+            //circle on all or some points
             for(auto && v : mesh_.vertices()){
-                if(itt == 17 || itt == 27 || itt == 122 || itt == 115 || itt == 118 || itt == 191) vc.push_back(v);
+                if(itt == 17 || itt == 27 || itt == 122 || itt == 115 || itt == 118 || itt == 191 || itt == 83) vc.push_back(v);//bunny eye
+
+//                if(itt == 0  || itt == 35 || itt == 19 || itt == 47 || itt == 4 || itt == 48 || itt == 20 || itt == 36 || itt == 3) vc.push_back(v);//quad2
+//                if(itt == 27  || itt == 79 || itt == 63 || itt == 78 || itt == 28 || itt == 70 || itt == 51 || itt == 69 || itt == 26) vc.push_back(v);//quad2
+
+                if(itt == 0 ||itt == 1 ||itt == 2 ||itt == 3 ||itt == 4 ||itt == 5 ||itt == 6 || itt == 7) vc.push_back(v);
+//                if(itt == 76 || itt == 18 || itt == 34 || itt == 30 || itt == 161 || itt == 158 || itt == 88) vc.push_back(v);//woody
 //                if(itt>100)continue;
-//                vc.push_back(v);
+                //vc.push_back(v);//all
                 itt++;
             }
 
@@ -113,6 +117,7 @@ namespace {
             //add the constraint to the constraints set
             for (auto && cc : ccs_) add(cc);
             for (auto && cc : circlecs_) add(cc);
+            for (auto && cc : circlecs2_) add(cc);
         }
 
     };
