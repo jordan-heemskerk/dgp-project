@@ -73,42 +73,41 @@ namespace {
 
     class circle_demo : public csc486a::window_base {
         private:
-
+        std::vector<unsigned int> quad_case = {0,1,2,3,4,5,6,7};
         std::deque<csc486a::circle_constraint> circlecs_;
-        std::deque<csc486a::circle_constraint> circlecs2_;
         std::deque<csc486a::closeness_constraint> ccs_;
+
         protected:
 
         public:
 
-        explicit circle_demo (OpenGP::SurfaceMesh mesh) : csc486a::window_base(std::move(mesh)) {
+        explicit circle_demo (OpenGP::SurfaceMesh mesh,  const char * file) : csc486a::window_base(std::move(mesh)) {
             //closeness constraints
             std::vector<OpenGP::SurfaceMesh::Vertex> va;
             size_t it = 0;
             for (auto && v : mesh_.vertices()) {
-               //if(it == 17 || it == 27 || it == 122 || it == 115 || it == 118 || it == 191) continue;
-               ccs_.emplace_back(mesh_,v,1.0f);
+               ccs_.emplace_back(mesh_,v,0.5f);
                va.push_back(v);
                it++;
             }
 
             //select set of vertices to be handle
             std::vector<OpenGP::SurfaceMesh::Vertex> vc;
-            std::vector<OpenGP::SurfaceMesh::Vertex> vc1;
-            size_t itt = 0;
-
-            //circle on all or some points
-            for(auto && v : mesh_.vertices()){
-                if(itt == 17 || itt == 27 || itt == 122 || itt == 115 || itt == 118 || itt == 191 || itt == 83) vc.push_back(v);//bunny eye
-
-//                if(itt == 0  || itt == 35 || itt == 19 || itt == 47 || itt == 4 || itt == 48 || itt == 20 || itt == 36 || itt == 3) vc.push_back(v);//quad2
-//                if(itt == 27  || itt == 79 || itt == 63 || itt == 78 || itt == 28 || itt == 70 || itt == 51 || itt == 69 || itt == 26) vc.push_back(v);//quad2
-
-                if(itt == 0 ||itt == 1 ||itt == 2 ||itt == 3 ||itt == 4 ||itt == 5 ||itt == 6 || itt == 7) vc.push_back(v);
-//                if(itt == 76 || itt == 18 || itt == 34 || itt == 30 || itt == 161 || itt == 158 || itt == 88) vc.push_back(v);//woody
-//                if(itt>100)continue;
-                //vc.push_back(v);//all
-                itt++;
+             size_t itt = 0;
+            //specify handle
+            if (std::strcmp(file,"quad1.obj")==0) {
+                for(auto && v : quad_case){
+                    vc.push_back(OpenGP::SurfaceMesh::Vertex(v));
+                    itt++;
+                }
+            } else if(std::strcmp(file,"bunny.obj")==0 || std::strcmp(file,"dodeca.obj")==0){
+                //circle on all points
+                for(auto && v : mesh_.vertices()){
+                    vc.push_back(v);
+                    itt++;
+                }
+            }else {
+                std::cout << "WARNING: no handles"<< std::endl;
             }
 
             //add constraint
@@ -117,7 +116,6 @@ namespace {
             //add the constraint to the constraints set
             for (auto && cc : ccs_) add(cc);
             for (auto && cc : circlecs_) add(cc);
-            for (auto && cc : circlecs2_) add(cc);
         }
 
     };
@@ -410,7 +408,7 @@ static std::unique_ptr<OpenGP::GlfwWindow> get_window (int argc, char ** argv) {
     if (std::strcmp(name,"rigid")==0) return pointer(new rigid_demo(std::move(mesh), file));
     if (std::strcmp(name,"pick")==0) return pointer(new point_pick(std::move(mesh)));
     if (std::strcmp(name,"plane")==0) return pointer(new plane_demo(std::move(mesh)));
-    if (std::strcmp(name,"circle")==0) return pointer(new circle_demo(std::move(mesh)));
+    if (std::strcmp(name,"circle")==0) return pointer(new circle_demo(std::move(mesh),file));
     
     std::ostringstream ss;
     ss << "Could not find a demo named \"" << name << "\"";
