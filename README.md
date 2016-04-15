@@ -29,6 +29,17 @@ Applying the same rigid transformations to a larger mesh is also possible.
 ![quad3-1](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/quad3-1.png "quad3-1")
 ![quad3-2](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/quad3-2.png "quad3-2")
 
+Sphere Constraint can be run in combination with closeness constraints, or alone on all vertices in the mesh. The following example shows in combination with closeness constraints. When run alone on the mesh, sphere constraints converge in a single iteration. 
+
+![bunny_sphere_1](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny_sphere_1.png "bunny_sphere_1")
+![bunny_sphere_2](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny_sphere_2.png "bunny_sphere_2")
+
+We alse demonstrate the circle constraint on the bunny mesh.
+
+![bunny_circle_1](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny_circle_1.png "bunny_circle_1")
+![bunny_circle_2](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny_circle_2.png "bunny_circle_2")
+
+
 ### Future Work
 As observed in the rigid demo with the larger plane, growing the number of vertices starts to have an effect on the performance of the system. This is largely due to unoptimized code in the projection stage. Currently there is a lot of memory use that could be preallocated instead of doing it each time. Optimizing each of the projection functions, and the way that the entire projection vector is built would probably help our implementation to run on larger meshes.
 
