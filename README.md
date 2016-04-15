@@ -5,9 +5,9 @@
 ### Introduction
 For this project, a C++ partial implementation of the Shape-Up paper[1] was completed. The main contribution from this paper was an engine that operated on meshes and allowed shape-based constraints to be used in a "plug and play" manner. For this to work, each different type of constraint must specify a "projection" function, which maps a given set of vertices onto the ideal case of the constraint. As an example, a plane constraint might find the best fitting plane for the given set of points and return the closest point on that plane for each point as the projection. 
 
-The main engine works through an iterative local-global approach. The engine's goal is to minimize the distance of the mesh from every projection, relative to its given weight. The does the following steps iteratavely:
-1) Compute the projection matrix b from each constraint on the *current* vertex positions.
-2) Solve the system A'Ax = A'b, where A weights and mean-centers the associated vertices of each constraint. There is a row in A for each projection. 
+The main engine works through an iterative local-global approach. The engine's goal is to minimize the distance of the mesh from every projection, relative to its given weight. The engine does the following steps iteratavely:
+ 1. Compute the projection matrix b from each constraint on the *current* vertex positions.
+ 2. Solve the system A'Ax = A'b, where A weights and mean-centers the associated vertices of each constraint. There is a row in A for each projection. 
 
 Since the matrix A'A is specified once and is sparse, it can be Cholesky factorized to efficiently solve the 2nd step iteratively. 
 
