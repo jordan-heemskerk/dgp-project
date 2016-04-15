@@ -5,7 +5,11 @@
 
 #pragma once
 
+
 #include <csc486a/circle_sphere_constraint_base.hpp>
+#include <OpenGP/SurfaceMesh/SurfaceMesh.h>
+#include <vector>
+
 
 namespace csc486a {
 

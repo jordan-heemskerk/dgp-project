@@ -7,6 +7,8 @@
 
 
 #include <csc486a/vertices_constraint_base.hpp>
+#include <OpenGP/SurfaceMesh/SurfaceMesh.h>
+#include <vector>
 
 
 namespace csc486a {
