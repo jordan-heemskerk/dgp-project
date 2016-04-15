@@ -76,6 +76,14 @@ namespace {
         std::vector <unsigned int> moveable_quad2_obj = {0,35,19,47,4,48,20,36,3,27,79,63,78,28,70,51,69,26};
         std::vector <unsigned int> static_quad2_obj = {30,74,56,66,37,77,60,67,34,1,31,15,43,5,41,13,29,2};
         
+        std::vector<unsigned int> moveable_quad3_obj = {2,90,442,34,482,130,338,18,350,142,494,46,454,102,310,7,302,94,446,38,486,134,342,10,330,122,474,26,434,82,290,3,293,835,585,903,377,855,665,963,321,843,617,927,409,879,761,1035,297,833,577,897,369,849,641,945,313,837,593,909,385,861,689,981,300};
+        
+        std::vector<unsigned int> static_quad3_obj = {1,294,86,438,30,478,126,334,14,346,138,490,42,450,98,306,6,303,95,447,39,487,135,343,11,331,123,475,27,435,83,291,0,299,1075,814,1076,426,1078,818,1079,326,1084,826,1085,430,1087,830,1088,296,1021,742,1022,402,1024,746,1025,318,1030,754,1031,406,1033,758,1034,295};
+        
+        
+        
+
+        
         std::deque<csc486a::rigid_constraint> rcs_;
         std::deque<csc486a::closeness_constraint> ccs_;
         
@@ -111,7 +119,10 @@ namespace {
             } else if (std::strcmp(file,"bunny.obj")==0) {
                 moveable_handle = std::move(moveable_bunny_obj);
                 static_handle = std::move(static_bunny_obj);
-            } else { std::cout << "Warning, no handles" << std::endl;}
+            } else if (std::strcmp(file,"quad3.obj")==0) {
+                moveable_handle = std::move(moveable_quad3_obj);
+                static_handle = std::move(static_quad3_obj);
+            } else { std::cout << "WARNING: no handles" << std::endl;}
             
             
             // copy the original to displaced
@@ -172,45 +183,51 @@ namespace {
 
         
 #define IT 5
+#define STEP_SIZE 0.1f
         void key_callback (int key, int scancode, int action, int mods) {
             
             window_base::key_callback(key, scancode, action, mods);
             
             Eigen::Vector3f offset;
+            bool update = false;
             
             if ((key==GLFW_KEY_UP) && (action==GLFW_RELEASE)) {
-                offset = Eigen::Vector3f(0,-0.1,0);
-                move_handle(offset);
-                for(int i = 0; i < IT; i++)s_();
-                mesh_.update_face_normals();
-                renderer_.init_data();
-                
+                offset = Eigen::Vector3f(0,-STEP_SIZE,0);
+                update = true;
             }
             
             if ((key==GLFW_KEY_LEFT) && (action==GLFW_RELEASE)) {
-                offset = Eigen::Vector3f(0,0,-0.1);
-                move_handle(offset);
-                for(int i = 0; i < IT; i++)s_();
-                mesh_.update_face_normals();
-                renderer_.init_data();
+                offset = Eigen::Vector3f(0,0,-STEP_SIZE);
+                update = true;
             }
             
             if ((key==GLFW_KEY_DOWN) && (action==GLFW_RELEASE)) {
-                offset = Eigen::Vector3f(0,0.1,0);
-                move_handle(offset);
-                for(int i = 0; i < IT; i++)s_();
-                mesh_.update_face_normals();
-                renderer_.init_data();
+                offset = Eigen::Vector3f(0,STEP_SIZE,0);
+                update = true;
             }
             
             if ((key==GLFW_KEY_RIGHT) && (action==GLFW_RELEASE)) {
-                offset = Eigen::Vector3f(0,0,0.1);
+                offset = Eigen::Vector3f(0,0,STEP_SIZE);
+                update = true;
+
+            }
+            
+            if ((key==GLFW_KEY_COMMA) && (action==GLFW_RELEASE)) {
+                offset = Eigen::Vector3f(-STEP_SIZE, 0, 0);
+                update = true;
+            }
+            
+            if ((key==GLFW_KEY_PERIOD) && (action==GLFW_RELEASE)) {
+                offset = Eigen::Vector3f(STEP_SIZE, 0, 0);
+                update = true;
+            }
+            
+            if (update) {
                 move_handle(offset);
                 for(int i = 0; i < IT; i++)s_();
                 mesh_.update_face_normals();
                 renderer_.init_data();
             }
-            
             
             
         }
