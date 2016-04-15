@@ -53,7 +53,6 @@ namespace {
             }
             //sphere constraint on 40 vertices
             std::vector<OpenGP::SurfaceMesh::Vertex> vs;
-            size_t itt = 0;
             if (std::strcmp(file,"bunny.obj")==0 || std::strcmp(file,"dodeca.obj")==0) {
                 for(auto && v : mesh_.vertices()){
                     vs.push_back(v);

@@ -25,9 +25,6 @@ namespace csc486a {
         std::cout << "C: "<< c << std::endl;
         auto result=(u*c).eval();
 
-        std::size_t num(vs_.size());
-//        for (std::size_t i=0;i<num;++i) ps.emplace_back(result.col(i)*w_);
-
         //get two vectors in the plane of the surface and dot and cross them
         auto v1 = (result.col(0) - result.col(1)).normalized();
         auto v2 = (result.col(0) - result.col(2)).normalized();
