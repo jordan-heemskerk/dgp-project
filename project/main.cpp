@@ -194,7 +194,7 @@ namespace {
             for (auto && v_i : static_handle) ccs_.emplace_back(mesh_,OpenGP::SurfaceMesh::Vertex(v_i),1.0f);
             
             //loop over onerings and add constraint for each one. weight this less than holding the handles
-//            unsigned int curr = 0;
+            unsigned int curr = 0;
             std::vector<OpenGP::SurfaceMesh::Vertex> onering;
             onering.reserve(10); // should be sufficient for quad and triangle
             for (auto && v : mesh.vertices()) {
