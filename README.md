@@ -11,8 +11,9 @@ The main engine works through an iterative local-global approach. The engine's g
 
 Since the matrix A'A is specified once and is sparse, it can be Cholesky factorized to efficiently solve the 2nd step iteratively. 
 
-## Results From Our Implementation
+### Results From Our Implementation
 For our implementation, the main engine was developed, as well as a subset of the different constraints mentioned in [1], namely:
+* Scale and Closeness Constraints
 * Line and Plane Constraints
 * Circle and Sphere Constraints
 * Rigid and Similarity Constriants
@@ -22,6 +23,35 @@ Some examples of our results include the realtime deformation of a plane, adheri
 ![quad2-1](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/quad2-1.png "quad2-1")
 ![quad2-2](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/quad2-2.png "quad2-2")
 ![quad2-3](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/quad2-3.png "quad2-3")
+
+### Building
+
+```bash
+cmake .
+cd project
+make
+./project rigid quad2.obj    # isometric one rings on quad (example above)
+```
+
+### Controls
+
+Depending on which demo you run, there are some different controls available. For the rigid examples the arrow keys move the movable handle in 2 dimensions, the other dimension is controlled by the comma and period keys. Clicking in some examples will print the vertex index to the console. Clicking in the scalable constraint demo will add a scaling constriant to the vertices which have been clicked.
+
+
+### Demos
+
+```bash
+./project rigid quad2.obj # must use only these meshes to have handles defined
+./project rigid bunny.obj
+./project rigid quad3.obj
+
+./project pick <any mesh> # interface for determining vertex indices
+
+./project test <any mesh> # add scalable constraint to clicked vertices (closeness on all others)
+
+./project sphere <any mesh> # project all vertices onto the best fitting sphere
+```
+
 
 ### References
 [1] [Bouaziz, S., Deuss, M., Schwartzburg, Y., Weise, T., & Pauly, M. (2012). Shape‐Up: Shaping discrete geometry with projections. Computer Graphics Forum, 31(5), 1657-1667. doi:10.1111/j.1467-8659.2012.03171.x](http://lgg.epfl.ch/publications/2012/shapeup/index.php)
