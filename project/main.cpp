@@ -44,28 +44,29 @@ namespace {
 
         public:
 
-        explicit sphere_demo (OpenGP::SurfaceMesh mesh) : csc486a::window_base(std::move(mesh)) {
+        explicit sphere_demo (OpenGP::SurfaceMesh mesh,  const char * file) : csc486a::window_base(std::move(mesh)) {
             //closeness constraints
             std::vector<OpenGP::SurfaceMesh::Vertex> va;
             for (auto && v : mesh_.vertices()) {
-               ccs_.emplace_back(mesh_,v,1.0f);
+               ccs_.emplace_back(mesh_,v,0.5f);
                va.push_back(v);
             }
-
             //sphere constraint on 40 vertices
             std::vector<OpenGP::SurfaceMesh::Vertex> vs;
             size_t itt = 0;
-            for(auto && v : mesh_.vertices()){
-                if(itt > 50) break;
-                vs.push_back(v);
-                //itt++; //for combo
+            if (std::strcmp(file,"bunny.obj")==0 || std::strcmp(file,"dodeca.obj")==0) {
+                for(auto && v : mesh_.vertices()){
+                    vs.push_back(v);
+                }
+            }else {
+                std::cout << "WARNING: no handles"<< std::endl;
             }
 
             spherecs_.emplace_back(mesh_,vs,1.0f);
 
             //add to solver
             for (auto && rc : spherecs_) add(rc);
-            //for(auto && ccs : ccs_) add(ccs); //for combo
+            for(auto && ccs : ccs_) add(ccs); //for combo
 
         }
 
@@ -101,7 +102,6 @@ namespace {
                     itt++;
                 }
             } else if(std::strcmp(file,"bunny.obj")==0 || std::strcmp(file,"dodeca.obj")==0){
-                //circle on all points
                 for(auto && v : mesh_.vertices()){
                     vc.push_back(v);
                     itt++;
@@ -404,10 +404,10 @@ static std::unique_ptr<OpenGP::GlfwWindow> get_window (int argc, char ** argv) {
     const char * name=argv[1];
     using pointer=std::unique_ptr<OpenGP::GlfwWindow>;
     if (std::strcmp(name,"test")==0) return pointer(new test_window(std::move(mesh)));
-    if (std::strcmp(name,"sphere")==0) return pointer(new sphere_demo(std::move(mesh)));
     if (std::strcmp(name,"rigid")==0) return pointer(new rigid_demo(std::move(mesh), file));
     if (std::strcmp(name,"pick")==0) return pointer(new point_pick(std::move(mesh)));
     if (std::strcmp(name,"plane")==0) return pointer(new plane_demo(std::move(mesh)));
+    if (std::strcmp(name,"sphere")==0) return pointer(new sphere_demo(std::move(mesh),file));
     if (std::strcmp(name,"circle")==0) return pointer(new circle_demo(std::move(mesh),file));
     
     std::ostringstream ss;
