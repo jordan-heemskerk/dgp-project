@@ -129,8 +129,9 @@ namespace csc486a {
         
         public:
         
-        virtual void key_callback (int, int, int, int) override;
-        virtual void mouse_press_callback (int, int, int) override;
+        
+            virtual void key_callback (int, int, int, int) override;
+            virtual void mouse_press_callback (int, int, int) override;
         
         
     };
