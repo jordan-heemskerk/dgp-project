@@ -1,0 +1,18 @@
+PROJECT_NAME = "CSC486a Shape-Up"
+PROJECT_BRIEF = "Final project for CSC486a Spring 2016. Jordan Heemskerk. Robert Leahy. Jorin Weatherston"
+
+OUTPUT_DIRECTORY = "doc"
+
+INPUT = include/
+
+EXCLUDE_PATTERNS = *optional.hpp
+
+FILE_PATTERNS = *.hpp 
+
+RECURSIVE = YES
+
+INPUT_FILTER =
+
+FILTER_SOURCE_FILES = NO
+
+STRIP_FROM_INC_PATH = include/

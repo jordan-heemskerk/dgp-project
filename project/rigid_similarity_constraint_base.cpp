@@ -22,7 +22,7 @@ namespace csc486a {
     }
     
     
-    rigid_similarity_constraint_base::rigid_similarity_constraint_base (const OpenGP::SurfaceMesh & mesh, OpenGP::SurfaceMesh original, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, rigid_similarity_constraint_base::type t, float clamp) : vertices_constraint_base(mesh, std::move(vs), w), original_(std::move(original)), t_(t), clamp_(clamp) { }
+    rigid_similarity_constraint_base::rigid_similarity_constraint_base (const OpenGP::SurfaceMesh & mesh, OpenGP::SurfaceMesh original, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, rigid_similarity_constraint_base::type t, float clamp) : vertices_constraint_base(mesh, std::move(vs), w), t_(t), original_(std::move(original)), clamp_(clamp) { }
     
     rigid_similarity_constraint_base::points_type rigid_similarity_constraint_base::project(points_type ps) const {
         
@@ -50,7 +50,7 @@ namespace csc486a {
         u_x = X.colwise().mean();
         u_y = Y.colwise().mean();
         auto s_x = variance(X);
-        auto s_y = variance(Y);
+        //auto s_y = variance(Y);
         auto centered_y = Y.rowwise() - Y.colwise().mean();
         auto centered_x = X.rowwise() - X.colwise().mean();
         Eigen::Matrix3f S_xy = (centered_y.adjoint() * centered_x)/float(Y.rows());
