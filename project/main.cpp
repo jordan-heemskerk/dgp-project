@@ -2,6 +2,7 @@
 #include <csc486a/plane_constraint.hpp>
 #include <csc486a/scaling_constraint.hpp>
 #include <csc486a/rigid_constraint.hpp>
+#include <csc486a/similarity_constraint.hpp>
 #include <csc486a/plane_constraint.hpp>
 #include <csc486a/window_base.hpp>
 #include <OpenGP/GL/GlfwWindow.h>
@@ -119,8 +120,8 @@ namespace {
 
     };
 
-
-    class rigid_demo : public csc486a::window_base {
+    template <typename Constraint>
+    class rigid_similarity_demo : public csc486a::window_base {
         
         private:
         
@@ -137,7 +138,7 @@ namespace {
         
 
         
-        std::deque<csc486a::rigid_constraint> rcs_;
+        std::deque<Constraint> rcs_;
         std::deque<csc486a::closeness_constraint> ccs_;
         
         std::vector<unsigned int> moveable_handle;
@@ -162,7 +163,7 @@ namespace {
         
         // use with quad2 or bunny
         // here we defer the triangulation so that one rings are done on the quad mesh
-        explicit rigid_demo (OpenGP::SurfaceMesh mesh, const char * file) : csc486a::window_base(std::move(mesh), true) {
+        explicit rigid_similarity_demo (OpenGP::SurfaceMesh mesh, const char * file) : csc486a::window_base(std::move(mesh), true) {
             
             
             // choose handles
@@ -196,14 +197,14 @@ namespace {
             unsigned int curr = 0;
             std::vector<OpenGP::SurfaceMesh::Vertex> onering;
             onering.reserve(10); // should be sufficient for quad and triangle
-            for (auto && v : mesh.vertices()) {
+            for (auto v : mesh_.vertices()) {
 
                 if (is_handle[v]) continue;
                 onering.clear();
                 onering.push_back(v);
 
-                for (auto && he : mesh.halfedges(v)) {
-                    OpenGP::SurfaceMesh::Vertex v_or = mesh.to_vertex(he);
+                for (auto he : mesh_.halfedges(v)) {
+                    OpenGP::SurfaceMesh::Vertex v_or = mesh_.to_vertex(he);
                     onering.push_back(v_or);
                 }
 
@@ -211,8 +212,8 @@ namespace {
                 add(rcs_.back());
                 
                 //progress report (for large meshes)
-                if (curr % (mesh.n_vertices()/20) == 0) {
-                    float prog = (curr * 100.0)/mesh.n_vertices();
+                if (curr % (mesh_.n_vertices()/20) == 0) {
+                    float prog = (curr * 100.0)/mesh_.n_vertices();
                     std::cout << "Onering Progress: " << prog << std::endl;
                 }
                 curr++;
@@ -403,11 +404,13 @@ static std::unique_ptr<OpenGP::GlfwWindow> get_window (int argc, char ** argv) {
     const char * name=argv[1];
     using pointer=std::unique_ptr<OpenGP::GlfwWindow>;
     if (std::strcmp(name,"test")==0) return pointer(new test_window(std::move(mesh)));
-    if (std::strcmp(name,"rigid")==0) return pointer(new rigid_demo(std::move(mesh), file));
+    if (std::strcmp(name,"rigid")==0) return pointer(new rigid_similarity_demo<csc486a::rigid_constraint>(std::move(mesh), file));
+    if (std::strcmp(name,"similar")==0) return pointer(new rigid_similarity_demo<csc486a::similarity_constraint>(std::move(mesh), file));
     if (std::strcmp(name,"pick")==0) return pointer(new point_pick(std::move(mesh)));
     if (std::strcmp(name,"plane")==0) return pointer(new plane_demo(std::move(mesh)));
     if (std::strcmp(name,"sphere")==0) return pointer(new sphere_demo(std::move(mesh),file));
     if (std::strcmp(name,"circle")==0) return pointer(new circle_demo(std::move(mesh),file));
+    
     
     std::ostringstream ss;
     ss << "Could not find a demo named \"" << name << "\"";
