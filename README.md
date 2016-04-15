@@ -90,3 +90,5 @@ To control single iterations of the algorithm you can press space bar. Depending
 
 ### References
 [1] [Bouaziz, S., Deuss, M., Schwartzburg, Y., Weise, T., & Pauly, M. (2012). Shape‐Up: Shaping discrete geometry with projections. Computer Graphics Forum, 31(5), 1657-1667. doi:10.1111/j.1467-8659.2012.03171.x](http://lgg.epfl.ch/publications/2012/shapeup/index.php)
+
+[2] [Calculate Rotation Matrix to align Vector A to Vector B in 3d?] (http://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d)
