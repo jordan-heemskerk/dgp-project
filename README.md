@@ -31,13 +31,13 @@ Applying the same rigid transformations to a larger mesh is also possible.
 
 Sphere Constraint can be run in combination with closeness constraints, or alone on all vertices in the mesh. The following example shows in combination with closeness constraints. When run alone on the mesh, sphere constraints converge in a single iteration. 
 
-![bunny_sphere_1](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny_sphere_1.png "bunny_sphere_1")
-![bunny_sphere_2](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny_sphere_2.png "bunny_sphere_2")
+![bunny-sphere-1](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny-sphere-1.png "bunny-sphere_1")
+![bunny-sphere-2](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny-sphere-2.png "bunny-sphere_2")
 
 We alse demonstrate the circle constraint on the bunny mesh.
 
-![bunny_circle_1](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny_circle_1.png "bunny_circle_1")
-![bunny_circle_2](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny_circle_2.png "bunny_circle_2")
+![bunny-circle-1](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny-circle-1.png "bunny-circle-1")
+![bunny-circle-2](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/bunny-circle-2.png "bunny-circle-2")
 
 
 ### Future Work
