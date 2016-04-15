@@ -47,6 +47,7 @@ Depending on which demo you run, there are different controls available. For the
 
 Clicking in some examples will print the vertex index to the console. Clicking in the test demo will add a scaling constriant to the vertices which have been clicked.
 
+To control single iterations of the algorithm you can press space bar. Depending on mesh size, there may or may not be a delay before the changes take place in the mesh. Algorithm iterations in the rigid and similarity constraint systems happen in sets of n iterations per press of the control buttons. You cannot directly control iterations in this case, only perscribe movements. 
 
 ### Demos
 
@@ -55,11 +56,20 @@ Clicking in some examples will print the vertex index to the console. Clicking i
 ./project rigid bunny.obj
 ./project rigid quad3.obj
 
+./project sphere bunny.obj # project all vertices onto the best fitting sphere
+./project sphere dodeca.obj 
+
+./project circle bunny.obj # project all vertices onto the best fitting circle
+./project circle dodeca.obj
+./project circle quad1.obj 
+
+./project plane <any mesh> # project all vertices onto the best fitting plane
+
+./project line <any mesh> # project all vertices onto the best fitting line
+
 ./project pick <any mesh> # interface for determining vertex indices
 
 ./project test <any mesh> # add scalable constraint to clicked vertices (closeness on all others)
-
-./project sphere <any mesh> # project all vertices onto the best fitting sphere
 ```
 
 
