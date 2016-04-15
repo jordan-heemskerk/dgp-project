@@ -7,35 +7,47 @@
 #include <csc486a/vertices_constraint_base.hpp>
 #include <Eigen/Dense>
 #include <OpenGP/SurfaceMesh/SurfaceMesh.h>
+#include <vector>
+
 
 namespace csc486a {
     
     class rigid_similarity_constraint_base : public vertices_constraint_base {
         
         
-    protected:
-        
-        enum class type {
+        protected:
             
-            rigid,
-            similarity
             
-        };
+            enum class type {
+                
+                rigid,
+                similarity
+                
+            };
+            
+            
+        private:
+            
+            
+            type t_;
+            OpenGP::SurfaceMesh deformed_;
+            OpenGP::SurfaceMesh original_;
+            float clamp_;
+            
+            
+        protected:
         
-    private:
+            
+            rigid_similarity_constraint_base (const OpenGP::SurfaceMesh & mesh, OpenGP::SurfaceMesh original, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, type t, float clamp);
         
-        type t_;
-        OpenGP::SurfaceMesh deformed_;
-        OpenGP::SurfaceMesh original_;
-        float clamp_;
+            
+        public:
         
-    protected:
-        
-        rigid_similarity_constraint_base (const OpenGP::SurfaceMesh & mesh, OpenGP::SurfaceMesh deformed, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w, type t, float clamp);
-        
-    public:
-        
-        virtual points_type project (points_type ps=points_type{}) const override;
+            
+            virtual points_type project (points_type ps=points_type{}) const override;
+            
         
     };
+    
+    
 }
