@@ -24,6 +24,9 @@ Some examples of our results include the realtime deformation of a plane, adheri
 ![quad2-2](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/quad2-2.png "quad2-2")
 ![quad2-3](https://github.com/jordan-heemskerk/dgp-project/blob/project/project/examples/quad2-3.png "quad2-3")
 
+### Future Work
+As seen in the rigid demo with quad3 (see Demos), growing the number of vertices starts to have an effect on the performance of the system. This is largely due to unoptimized code in the projection stage. Currently there is a lot of memory allocation that could be preallocated instead of doing it each time. Optimizing each of the projection functions, and the way that the entire projection vector is built would probably help our implementation to run on larger meshes.
+
 ### Building
 
 ```bash
