@@ -2,6 +2,7 @@
 #include <csc486a/plane_constraint.hpp>
 #include <csc486a/scaling_constraint.hpp>
 #include <csc486a/rigid_constraint.hpp>
+#include <csc486a/plane_constraint.hpp>
 #include <csc486a/window_base.hpp>
 #include <OpenGP/GL/GlfwWindow.h>
 #include <OpenGP/SurfaceMesh/SurfaceMesh.h>
@@ -37,43 +38,83 @@ namespace {
         private:
 
         std::deque<csc486a::closeness_constraint> ccs_;
-        std::deque<csc486a::rigid_constraint> rcs_;
-        //std::optional<csc486a::line_constraint> lc_;
-        std::deque<csc486a::circle_constraint> circlecs_;
+        std::deque<csc486a::sphere_constraint> spherecs_;
 
         protected:
 
         public:
 
-        explicit sphere_demo (OpenGP::SurfaceMesh mesh) : csc486a::window_base(std::move(mesh)) {
+        explicit sphere_demo (OpenGP::SurfaceMesh mesh,  const char * file) : csc486a::window_base(std::move(mesh)) {
             //closeness constraints
             std::vector<OpenGP::SurfaceMesh::Vertex> va;
             for (auto && v : mesh_.vertices()) {
-               ccs_.emplace_back(mesh_,v,1.0f);
+               ccs_.emplace_back(mesh_,v,0.5f);
                va.push_back(v);
             }
-
-            //circle constraint on 40 vertices
+            //sphere constraint on 40 vertices
             std::vector<OpenGP::SurfaceMesh::Vertex> vs;
-            size_t itt = 0;
-            for(auto && v : mesh_.vertices()){
-                if(itt > 50) break;
-                vs.push_back(v);
-                //itt++;
+            if (std::strcmp(file,"bunny.obj")==0 || std::strcmp(file,"dodeca.obj")==0) {
+                for(auto && v : mesh_.vertices()){
+                    vs.push_back(v);
+                }
+            }else {
+                std::cout << "WARNING: no handles"<< std::endl;
             }
 
+            spherecs_.emplace_back(mesh_,vs,1.0f);
 
-            circlecs_.emplace_back(mesh_,vs,1.0f);
+            //add to solver
+            for (auto && rc : spherecs_) add(rc);
+            for(auto && ccs : ccs_) add(ccs); //for combo
 
+        }
 
+    };
 
-            // add to solver
-    //                    s_.emplace(mesh);
-            //for (auto && cc : ccs_) s_->add(cc);
-            for (auto && rc : circlecs_) add(rc);
-    //                    for (auto && rc : rcs_) s_->add(rc);
+    class circle_demo : public csc486a::window_base {
+        private:
+        std::vector<unsigned int> quad_case = {0,1,2,3,4,5,6,7};
+        std::deque<csc486a::circle_constraint> circlecs_;
+        std::deque<csc486a::closeness_constraint> ccs_;
 
+        protected:
 
+        public:
+
+        explicit circle_demo (OpenGP::SurfaceMesh mesh,  const char * file) : csc486a::window_base(std::move(mesh)) {
+            //closeness constraints
+            std::vector<OpenGP::SurfaceMesh::Vertex> va;
+            size_t it = 0;
+            for (auto && v : mesh_.vertices()) {
+               ccs_.emplace_back(mesh_,v,0.5f);
+               va.push_back(v);
+               it++;
+            }
+
+            //select set of vertices to be handle
+            std::vector<OpenGP::SurfaceMesh::Vertex> vc;
+             size_t itt = 0;
+            //specify handle
+            if (std::strcmp(file,"quad1.obj")==0) {
+                for(auto && v : quad_case){
+                    vc.push_back(OpenGP::SurfaceMesh::Vertex(v));
+                    itt++;
+                }
+            } else if(std::strcmp(file,"bunny.obj")==0 || std::strcmp(file,"dodeca.obj")==0){
+                for(auto && v : mesh_.vertices()){
+                    vc.push_back(v);
+                    itt++;
+                }
+            }else {
+                std::cout << "WARNING: no handles"<< std::endl;
+            }
+
+            //add constraint
+            circlecs_.emplace_back(mesh_,vc,1.0f);
+
+            //add the constraint to the constraints set
+            for (auto && cc : ccs_) add(cc);
+            for (auto && cc : circlecs_) add(cc);
         }
 
     };
@@ -362,10 +403,11 @@ static std::unique_ptr<OpenGP::GlfwWindow> get_window (int argc, char ** argv) {
     const char * name=argv[1];
     using pointer=std::unique_ptr<OpenGP::GlfwWindow>;
     if (std::strcmp(name,"test")==0) return pointer(new test_window(std::move(mesh)));
-    if (std::strcmp(name,"sphere")==0) return pointer(new sphere_demo(std::move(mesh)));
     if (std::strcmp(name,"rigid")==0) return pointer(new rigid_demo(std::move(mesh), file));
     if (std::strcmp(name,"pick")==0) return pointer(new point_pick(std::move(mesh)));
     if (std::strcmp(name,"plane")==0) return pointer(new plane_demo(std::move(mesh)));
+    if (std::strcmp(name,"sphere")==0) return pointer(new sphere_demo(std::move(mesh),file));
+    if (std::strcmp(name,"circle")==0) return pointer(new circle_demo(std::move(mesh),file));
     
     std::ostringstream ss;
     ss << "Could not find a demo named \"" << name << "\"";

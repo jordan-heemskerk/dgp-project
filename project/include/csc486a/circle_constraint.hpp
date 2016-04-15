@@ -45,7 +45,7 @@ namespace csc486a {
              */
             circle_constraint (const OpenGP::SurfaceMesh & mesh, std::vector<OpenGP::SurfaceMesh::Vertex> vs, float w);
 
-
+        points_type project(points_type ps) const;
     };
 
 

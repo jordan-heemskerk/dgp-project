@@ -10,7 +10,7 @@ project(${PROJECTNAME})
 
 # Directory of cmake config files
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-
+set(CMAKE_CXX_FLAGS "-fsanitize=float-divide-by-zero")
 #================================
 # Find required packages.
 #================================
